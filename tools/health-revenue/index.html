@@ -399,11 +399,17 @@
 
     .report-head {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
       gap: 20px;
-      align-items: end;
+      align-items: stretch;
       padding-bottom: 22px;
       border-bottom: 1px solid var(--line);
+    }
+
+    .report-main {
+      display: grid;
+      align-content: space-between;
+      gap: 22px;
     }
 
     .report-head h2 {
@@ -433,10 +439,16 @@
     }
 
     .report-actions {
-      display: flex;
-      justify-content: flex-end;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: 1fr;
       gap: 8px;
+    }
+
+    .report-actions .download-button,
+    .report-actions .reset-button {
+      width: 100%;
+      min-height: 48px;
+      font-size: 15px;
     }
 
     .secondary-button,
@@ -835,6 +847,28 @@
       background: #f8f4ea;
     }
 
+    .report-contact-card {
+      margin-top: 0;
+      grid-template-columns: 1fr;
+      align-content: start;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .report-contact-card h3 {
+      font-size: 20px;
+    }
+
+    .report-contact-card p {
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .report-contact-card .wechat-slot {
+      justify-items: start;
+      text-align: left;
+    }
+
     .lead-card h3 {
       margin: 0;
       font-size: 21px;
@@ -875,6 +909,15 @@
       border-radius: var(--radius);
       background: #fff;
       box-shadow: 0 10px 24px rgba(33, 46, 40, 0.08);
+    }
+
+    .report-contact-card .qr-box {
+      width: 124px;
+      padding: 6px;
+    }
+
+    .report-contact-card .wechat-note {
+      max-width: 190px;
     }
 
     .qr-box img {
@@ -926,10 +969,6 @@
       background: var(--paper);
     }
 
-    .capture-export .report-head {
-      grid-template-columns: 1fr;
-    }
-
     .capture-export .hero-metrics {
       grid-template-columns: 1.1fr 1fr 1fr;
     }
@@ -940,6 +979,10 @@
 
     .capture-export .lead-card {
       grid-template-columns: minmax(0, 1fr) 180px;
+    }
+
+    .capture-export .report-head {
+      grid-template-columns: minmax(0, 1fr) 300px;
     }
 
     .formula code {
@@ -979,12 +1022,11 @@
         padding-top: 14px;
       }
 
-      .topbar,
-      .report-head {
-        align-items: start;
-        grid-template-columns: 1fr;
-        display: grid;
-      }
+	      .topbar {
+	        align-items: start;
+	        grid-template-columns: 1fr;
+	        display: grid;
+	      }
 
       .top-note {
         text-align: left;
@@ -1046,9 +1088,9 @@
         min-height: auto;
       }
 
-      .assessment-card {
-        grid-template-columns: 1fr;
-      }
+	      .assessment-card {
+	        grid-template-columns: 1fr;
+	      }
 
       .assessment-button {
         width: 100%;
@@ -1066,6 +1108,21 @@
 
       .lead-card {
         grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .report-head {
+        grid-template-columns: 1fr;
+      }
+
+      .report-contact-card .wechat-slot {
+        justify-items: center;
+        text-align: center;
+      }
+
+      .report-contact-card .wechat-note {
+        max-width: 220px;
       }
     }
   </style>
@@ -1129,17 +1186,34 @@
 
         <section class="result-view" id="resultView" aria-label="测算结果">
           <div id="reportCapture">
-          <div class="report-head">
-            <div>
-              <p class="eyebrow" style="color: var(--moss); margin-bottom: 10px;">BUSINESS POTENTIAL REPORT</p>
-              <h2>健康业务营收潜力测算结果</h2>
-              <p>这份结果先回答老板最关心的问题：在当前客户底盘上，这个新业务一年大概能做出多大体量。</p>
-            </div>
-            <div class="report-actions" data-capture-exclude>
-              <button type="button" class="download-button" id="reportLeadButton">获取完整报告</button>
-              <button type="button" class="reset-button" id="resetButton">重新测算</button>
-            </div>
-          </div>
+	          <div class="report-head">
+	            <div class="report-main">
+	              <div>
+	                <p class="eyebrow" style="color: var(--moss); margin-bottom: 10px;">BUSINESS POTENTIAL REPORT</p>
+	                <h2>健康业务营收潜力测算结果</h2>
+	                <p>这份结果先回答老板最关心的问题：在当前客户底盘上，这个新业务一年大概能做出多大体量。</p>
+	              </div>
+	              <div class="report-actions" data-capture-exclude>
+	                <button type="button" class="download-button" id="reportLeadButton">获取完整报告</button>
+	                <button type="button" class="reset-button" id="resetButton">重新测算</button>
+	              </div>
+	            </div>
+
+	            <div class="lead-card report-contact-card">
+	              <div>
+	                <div class="lead-kicker">完整评估</div>
+	                <h3>想进一步判断怎么落地，可以继续沟通</h3>
+	                <p>如果要判断适不适合自建、从哪里试点、需要哪些品项和团队动作，可以扫码添加李博士微信。</p>
+	              </div>
+	              <div class="wechat-slot">
+	                <div class="qr-box">
+	                  <img src="../../assets/lee-wechat-qr.jpg" alt="李博士微信二维码">
+	                </div>
+	                <span class="wechat-name">李博士微信</span>
+	                <span class="wechat-note">添加后发送测算手机号，用于匹配完整报告。</span>
+	              </div>
+	            </div>
+	          </div>
 
           <div class="judgement">
             <div class="judgement-label">初步结论</div>
@@ -1181,28 +1255,13 @@
             </div>
           </div>
 
-	          <div class="assessment-card">
-	            <div>
-	              <div class="lead-kicker">NEXT STEP</div>
-	              <h3>继续做业务搭建潜力评估</h3>
-	              <p>营收潜力只是第一步。下一步用 10 道题判断：机构更适合自己搭建、先小范围试点，还是需要老师介入做产品、交付和组织设计。</p>
-	            </div>
-	            <a class="assessment-button" href="./assessment.html">进入专项评估</a>
-	          </div>
-
-          <div class="lead-card">
+          <div class="assessment-card">
             <div>
-              <div class="lead-kicker">完整评估</div>
-              <h3>想进一步判断怎么落地，可以继续沟通</h3>
-              <p>这份测算先回答健康业务的营收空间。后续如果要判断适不适合自建、从哪里试点、需要哪些品项和团队动作，可以留下手机号领取完整报告；也可以直接添加李博士微信。添加后发一下刚才填写的手机号，方便匹配你的测算结果。</p>
+              <div class="lead-kicker">NEXT STEP</div>
+              <h3>继续做业务搭建潜力评估</h3>
+              <p>营收潜力只是第一步。下一步用 10 道题判断：机构更适合自己搭建、先小范围试点，还是需要老师介入做产品、交付和组织设计。</p>
             </div>
-            <div class="wechat-slot">
-              <div class="qr-box">
-                <img src="../../assets/lee-wechat-qr.jpg" alt="李博士微信二维码">
-              </div>
-              <span class="wechat-name">李博士微信</span>
-              <span class="wechat-note">添加后发送测算手机号，用于匹配完整报告。</span>
-            </div>
+            <a class="assessment-button" href="./assessment.html">进入专项评估</a>
           </div>
 
 	          <div class="report-card basis-card">
