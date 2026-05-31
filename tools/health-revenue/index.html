@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>大健康营收潜力测算器 V3</title>
+  <title>AI健康业务营收潜力测算器 V3</title>
   <style>
     :root {
       --canvas: #f4f3ec;
@@ -163,10 +163,76 @@
 
     .question-area {
       padding: 34px clamp(22px, 4vw, 52px);
+      background: var(--paper);
+    }
+
+    .flow-view {
+      display: none;
+    }
+
+    .flow-view.active {
+      display: block;
+    }
+
+    .intro-view {
+      display: none;
+      min-height: 592px;
+      align-items: center;
+    }
+
+    .intro-view.active {
+      display: flex;
+    }
+
+    .intro-panel {
+      width: 100%;
       display: grid;
+      gap: 18px;
+    }
+
+    .intro-kicker {
+      color: var(--moss);
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .intro-title {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(32px, 4.2vw, 52px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .intro-copy {
+      max-width: 720px;
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    .intro-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .intro-note {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .wizard-view {
+      display: none;
+      min-height: 592px;
       grid-template-rows: auto 1fr auto;
       gap: 22px;
-      background: var(--paper);
+    }
+
+    .wizard-view.active {
+      display: grid;
     }
 
     .progress-row {
@@ -198,7 +264,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 24px;
+      gap: 22px;
     }
 
     .question-kicker {
@@ -210,16 +276,17 @@
     .question-title {
       max-width: 720px;
       margin: 0;
-      font-size: clamp(25px, 4.2vw, 42px);
-      line-height: 1.12;
+      font-size: clamp(25px, 3.6vw, 40px);
+      line-height: 1.18;
       letter-spacing: 0;
     }
 
     .question-help {
       max-width: 640px;
-      margin: -12px 0 0;
+      margin: 10px 0 0;
       color: var(--muted);
       font-size: 15px;
+      line-height: 1.45;
     }
 
     .options {
@@ -330,14 +397,6 @@
       display: block;
     }
 
-    .wizard-view.active {
-      display: grid;
-    }
-
-    .wizard-view {
-      display: none;
-    }
-
     .report-head {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -418,6 +477,112 @@
       cursor: default;
       opacity: 0.55;
       transform: none;
+    }
+
+    .lead-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(23, 35, 31, 0.56);
+    }
+
+    .lead-modal-backdrop.active {
+      display: flex;
+    }
+
+    .lead-modal {
+      width: min(520px, 100%);
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .lead-modal-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .lead-modal h2 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 26px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .lead-modal p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .lead-form {
+      display: grid;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .lead-form label {
+      color: var(--ink-soft);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .lead-form input {
+      width: 100%;
+      min-height: 46px;
+      padding: 0 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: #fffdf7;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .lead-form input:focus {
+      outline: 2px solid rgba(47, 105, 88, 0.22);
+      border-color: var(--moss);
+    }
+
+    .lead-form-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .lead-form-note {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .lead-form-status {
+      min-height: 20px;
+      color: var(--clay);
+      font-size: 13px;
+      font-weight: 800;
     }
 
     .hero-metrics {
@@ -516,15 +681,14 @@
 
     .scenarios {
       display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
     }
 
     .scenario {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 14px;
+      display: block;
+      min-height: 172px;
       padding: 14px;
-      align-items: center;
     }
 
     .scenario-title {
@@ -539,32 +703,40 @@
     }
 
     .scenario-money {
+      margin-top: 16px;
       color: var(--moss);
-      font-size: 24px;
+      font-size: 30px;
       line-height: 1;
       font-weight: 950;
-      text-align: right;
+      text-align: left;
     }
 
     .scenario-share {
-      margin-top: 5px;
+      margin-top: 7px;
       color: var(--clay);
       font-size: 12px;
       font-weight: 900;
-      text-align: right;
+      text-align: left;
     }
 
     .judgement {
-      margin-top: 12px;
-      padding: 18px;
+      margin-top: 22px;
+      padding: 22px;
       border-radius: var(--radius);
       background: #1f2621;
       color: #fff8ea;
     }
 
+    .judgement-label {
+      margin: 0 0 10px;
+      color: #b8cfc5;
+      font-size: 12px;
+      font-weight: 950;
+    }
+
     .judgement h3 {
-      margin: 0 0 8px;
-      font-size: 20px;
+      margin: 0 0 10px;
+      font-size: clamp(24px, 3.4vw, 38px);
       line-height: 1.2;
       letter-spacing: 0;
     }
@@ -572,7 +744,83 @@
     .judgement p {
       margin: 0;
       color: #ddd8c9;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .judgement-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .judgement-metric {
+      padding: 14px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .judgement-metric span {
+      display: block;
+      color: #c9d6cf;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .judgement-metric strong {
+      display: block;
+      margin-top: 8px;
+      color: #fffaf0;
+      font-size: clamp(26px, 4vw, 42px);
+      line-height: 1;
+    }
+
+    .scenario-card,
+    .basis-card {
+      margin-top: 12px;
+    }
+
+    .assessment-card {
+      margin-top: 12px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      border: 1px solid rgba(47, 105, 88, 0.36);
+      border-radius: var(--radius);
+      background: var(--moss-soft);
+    }
+
+    .assessment-card h3 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .assessment-card p {
+      max-width: 740px;
+      margin: 9px 0 0;
+      color: var(--ink-soft);
       font-size: 14px;
+    }
+
+    .assessment-button {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border-radius: var(--radius);
+      background: var(--moss);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 950;
+      line-height: 1;
+      text-decoration: none;
+      white-space: nowrap;
     }
 
     .lead-card {
@@ -738,21 +986,57 @@
 
       .options,
       .options.compact,
+      .judgement-metrics,
       .facts {
         grid-template-columns: 1fr;
+      }
+
+      .intro-view,
+      .wizard-view {
+        min-height: auto;
+      }
+
+      .intro-title {
+        font-size: clamp(30px, 7vw, 42px);
+      }
+
+      .intro-copy {
+        font-size: 15px;
       }
 
       .choice {
         min-height: 66px;
       }
 
+      .question {
+        gap: 18px;
+      }
+
+      .question-title {
+        font-size: clamp(24px, 6.2vw, 34px);
+        line-height: 1.18;
+      }
+
+      .question-help {
+        margin-top: 8px;
+        font-size: 14px;
+      }
+
+      .scenarios,
       .scenario {
         grid-template-columns: 1fr;
       }
 
-      .scenario-money,
-      .scenario-share {
-        text-align: left;
+      .scenario {
+        min-height: auto;
+      }
+
+      .assessment-card {
+        grid-template-columns: 1fr;
+      }
+
+      .assessment-button {
+        width: 100%;
       }
 
       .report-actions {
@@ -774,25 +1058,38 @@
 <body>
   <main class="app">
     <header class="topbar">
-      <div class="mark">大健康营收潜力测算器</div>
-      <div class="top-note">不需要填写真实总营收 · 所有数字均按区间估算</div>
+      <div class="mark">AI健康业务营收潜力测算器</div>
+      <div class="top-note">AI智慧模型 · 快速估算机构健康业务潜力</div>
     </header>
 
-    <section class="stage" aria-label="大健康营收潜力测算器">
+    <section class="stage" aria-label="健康业务营收潜力测算器">
       <div class="stage-inner">
         <aside class="side">
           <div>
-            <p class="eyebrow">LONGEVITY BUSINESS MODEL</p>
-            <h1>先算一年可能新增多少营收</h1>
-            <p class="side-copy">用客户底盘、消费能力、年龄画像和双美基础，估算机构导入大健康业务后的本地诊所业绩与渠道放大空间。</p>
+            <p class="eyebrow">AI LONGEVITY REVENUE MODEL</p>
+            <h1>AI健康业务营收潜力测算器</h1>
+            <p class="side-copy">基于公开财务数据、Dr袁私域业务数据和机构经营经验，由 AI 智慧模型推演机构导入健康业务后的新增营收空间。</p>
           </div>
           <div class="model-card">
-            <strong>底层模型</strong>
-            <p>活跃客户底盘 × 高潜客户池比例 × 大健康渗透率 × 年客单价。结果是经营判断工具，不是财务承诺。</p>
+            <strong>AI智慧模型</strong>
+            <p>模型会综合客户底盘、消费能力、年龄画像、双美基础和渠道合作空间，生成保守、基准、进取三档经营推演。</p>
           </div>
         </aside>
 
-        <section class="question-area wizard-view active" id="wizardView">
+        <section class="question-area flow-view active" id="flowView">
+          <div class="intro-view active" id="introView">
+            <div class="intro-panel">
+              <div class="intro-kicker">开始测算前</div>
+              <h2 class="intro-title">先看清：健康业务到底可能做出多大体量。</h2>
+              <p class="intro-copy">本工具基于上市公司财报、Dr袁私域业务数据与机构经营模型搭建，通过 AI 智慧模型快速推演本机构的健康业务潜力。你不需要填写真实总营收，只需要选择几个关键区间，就可以看到保守、基准和进取三档测算结果。</p>
+              <div class="intro-actions">
+                <button type="button" class="primary-button" id="startButton">开始测算</button>
+                <span class="intro-note">约 1 分钟 · 共 7 个选择题</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wizard-view" id="wizardView">
           <div class="progress-row">
             <span id="stepLabel">第 1 / 6 题</span>
             <div class="track" aria-hidden="true"><div class="fill" id="progressFill"></div></div>
@@ -812,6 +1109,7 @@
             <button type="button" class="text-button" id="backButton">上一步</button>
             <button type="button" class="primary-button" id="nextButton" disabled>下一题</button>
           </div>
+          </div>
         </section>
 
         <section class="result-view" id="resultView" aria-label="测算结果">
@@ -819,97 +1117,84 @@
           <div class="report-head">
             <div>
               <p class="eyebrow" style="color: var(--moss); margin-bottom: 10px;">BUSINESS POTENTIAL REPORT</p>
-              <h2>大健康业务营收潜力测算结果</h2>
+              <h2>健康业务营收潜力测算结果</h2>
               <p>这份结果先回答老板最关心的问题：在当前客户底盘上，这个新业务一年大概能做出多大体量。</p>
             </div>
             <div class="report-actions" data-capture-exclude>
-              <button type="button" class="download-button" id="downloadReportButton">生成图片报告</button>
-              <a class="secondary-button" href="./assessment.html">继续做适配评估</a>
+              <button type="button" class="download-button" id="reportLeadButton">获取完整报告</button>
               <button type="button" class="reset-button" id="resetButton">重新测算</button>
             </div>
           </div>
 
-          <div class="hero-metrics">
-            <div class="hero-metric primary">
-              <div class="metric-label">本地诊所基准年业绩</div>
-              <div class="metric-value" id="midLocal">0万</div>
-              <div class="metric-caption" id="midCaption">按4万年客单价测算</div>
-            </div>
-            <div class="hero-metric">
-              <div class="metric-label">当前年营收估算</div>
-              <div class="metric-value" id="currentRevenue">0万</div>
-              <div class="metric-caption">客户底盘 × 当前年消费</div>
-            </div>
-            <div class="hero-metric">
-              <div class="metric-label">含渠道合作总盘</div>
-              <div class="metric-value" id="channelTotal">0万</div>
-              <div class="metric-caption" id="channelCaption">按选择的渠道放大倍率估算</div>
-            </div>
-          </div>
-
-          <div class="report-grid">
-            <div class="report-card">
-              <h3>测算底盘</h3>
-              <div class="facts">
-                <div class="fact"><span>活跃客户底盘</span><strong id="customerBase">0人</strong></div>
-                <div class="fact"><span>高潜客户池</span><strong id="targetPool">0人</strong></div>
-                <div class="fact"><span>客户池内渗透率</span><strong id="basePenetration">0%</strong></div>
-                <div class="fact"><span>基准占当前营收</span><strong id="midShare">0%</strong></div>
-              </div>
-
-              <div class="formula">
-                <code id="formulaLine">本地诊所基准业绩 = 0 × 0% × 0% × 4万 = 0万</code>
-                <code id="channelLine">含渠道合作总盘 = 本地诊所业绩 × 1 = 0万</code>
-              </div>
-            </div>
-
-            <div class="report-card">
-              <h3>三档经营情境</h3>
-              <div class="scenarios">
-                <div class="scenario">
-                  <div>
-                    <div class="scenario-title">保守情境</div>
-                    <div class="scenario-detail" id="lowDetail">年客单价3万 · 渗透率0%</div>
-                  </div>
-                  <div>
-                    <div class="scenario-money" id="lowLocal">0万</div>
-                    <div class="scenario-share" id="lowShare">占当前营收0%</div>
-                  </div>
-                </div>
-                <div class="scenario">
-                  <div>
-                    <div class="scenario-title">基准情境</div>
-                    <div class="scenario-detail" id="midDetail">年客单价4万 · 渗透率0%</div>
-                  </div>
-                  <div>
-                    <div class="scenario-money" id="midLocalSmall">0万</div>
-                    <div class="scenario-share" id="midShareSmall">占当前营收0%</div>
-                  </div>
-                </div>
-                <div class="scenario">
-                  <div>
-                    <div class="scenario-title">进取情境</div>
-                    <div class="scenario-detail" id="highDetail">年客单价5万 · 渗透率0%</div>
-                  </div>
-                  <div>
-                    <div class="scenario-money" id="highLocal">0万</div>
-                    <div class="scenario-share" id="highShare">占当前营收0%</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div class="judgement">
+            <div class="judgement-label">初步结论</div>
             <h3 id="judgementTitle">这是一个值得认真验证的新业务板块</h3>
             <p id="judgementText">先用小范围客户筛选、健康评估和轻量项目跑通闭环，再决定是否进入诊所化和系统化投入。</p>
+            <div class="judgement-metrics">
+              <div class="judgement-metric">
+                <span>基准本地诊所年业绩</span>
+                <strong id="midLocal">0万</strong>
+              </div>
+              <div class="judgement-metric">
+                <span>含渠道合作总盘</span>
+                <strong id="channelTotal">0万</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-card scenario-card">
+            <h3>三档经营情境预测</h3>
+            <div class="scenarios">
+              <div class="scenario">
+                <div class="scenario-title">保守情境</div>
+                <div class="scenario-detail" id="lowDetail">年客单价3万 · 渗透率0%</div>
+                <div class="scenario-money" id="lowLocal">0万</div>
+                <div class="scenario-share" id="lowShare">占当前营收0%</div>
+              </div>
+              <div class="scenario">
+                <div class="scenario-title">基准情境</div>
+                <div class="scenario-detail" id="midDetail">年客单价4万 · 渗透率0%</div>
+                <div class="scenario-money" id="midLocalSmall">0万</div>
+                <div class="scenario-share" id="midShareSmall">占当前营收0%</div>
+              </div>
+              <div class="scenario">
+                <div class="scenario-title">进取情境</div>
+                <div class="scenario-detail" id="highDetail">年客单价5万 · 渗透率0%</div>
+                <div class="scenario-money" id="highLocal">0万</div>
+                <div class="scenario-share" id="highShare">占当前营收0%</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="assessment-card">
+            <div>
+              <div class="lead-kicker">NEXT STEP</div>
+              <h3>继续做业务搭建潜力评估</h3>
+              <p>营收潜力只是第一步。下一步用 10 道题判断：机构更适合自己搭建、先小范围试点，还是需要老师介入做产品、交付和组织设计。</p>
+            </div>
+            <a class="assessment-button" href="./assessment.html">进入专项评估</a>
+          </div>
+
+          <div class="report-card basis-card">
+            <h3>为什么得出这个结果</h3>
+            <div class="facts">
+              <div class="fact"><span>当前年营收估算</span><strong id="currentRevenue">0万</strong></div>
+              <div class="fact"><span>活跃客户底盘</span><strong id="customerBase">0人</strong></div>
+              <div class="fact"><span>高潜客户池</span><strong id="targetPool">0人</strong></div>
+              <div class="fact"><span>客户池内渗透率</span><strong id="basePenetration">0%</strong></div>
+            </div>
+
+            <div class="formula">
+              <code id="formulaLine">本地诊所基准业绩 = 0 × 0% × 0% × 4万 = 0万</code>
+              <code id="channelLine">含渠道合作总盘 = 本地诊所业绩 × 1 = 0万</code>
+            </div>
           </div>
 
           <div class="lead-card">
             <div>
-              <div class="lead-kicker">NEXT STEP</div>
-              <h3>想进一步了解课程搭建、品项设计和落地路径？</h3>
-              <p>可以联系 Dr 袁伟畅的企业微信，获取更进一步的资料，包括大健康业务的课程设计、品项组合、客户筛选和团队落地建议。</p>
+              <div class="lead-kicker">更多资料</div>
+              <h3>需要课程搭建、品项设计和落地资料？</h3>
+              <p>可以联系 Dr 袁伟畅的企业微信，获取大健康业务的课程设计、品项组合、客户筛选和团队落地建议。</p>
             </div>
             <div class="wechat-slot">
               <div class="qr-box">企业微信<br>二维码预留</div>
@@ -923,6 +1208,29 @@
 
     <p class="footnote">测算为经营判断工具。真实结果取决于客户筛选、医生交付、合规边界、团队销售、复购设计与本地资源配置。</p>
   </main>
+
+  <div class="lead-modal-backdrop" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="leadModalTitle">
+    <div class="lead-modal">
+      <div class="lead-modal-head">
+        <div>
+          <div class="lead-kicker">完整报告</div>
+          <h2 id="leadModalTitle">留下手机号，获取完整评估报告</h2>
+          <p>我们会结合你的测算结果，进入后续完整评估流程。提交后会记录手机号、答题内容和测算结果，用于发送完整报告与后续沟通。</p>
+        </div>
+        <button type="button" class="modal-close" id="leadModalClose" aria-label="关闭">×</button>
+      </div>
+
+      <form class="lead-form" id="leadForm">
+        <label for="leadPhone">手机号</label>
+        <input id="leadPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="请输入手机号" required>
+        <div class="lead-form-row">
+          <button type="submit" class="primary-button">提交并获取完整报告</button>
+          <span class="lead-form-note">手机号仅用于报告发送与业务沟通。</span>
+        </div>
+        <div class="lead-form-status" id="leadFormStatus" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
 
   <script>
     const questions = [
@@ -944,6 +1252,22 @@
           { label: "30-39家", meta: "集团化运营", value: 35 },
           { label: "40-49家", meta: "规模集团", value: 45 },
           { label: "50家以上", meta: "大型集团", value: 60 }
+        ]
+      },
+      {
+        key: "storeType",
+        short: "类型",
+        kicker: "业态类型",
+        title: "你的主营门店类型更接近哪一种？",
+        help: "不同业态的客户关系、信任基础和健康需求不同，会影响健康业务渗透率。",
+        compact: true,
+        options: [
+          { label: "传统生活美容", meta: "老客信任强，健康转化空间高", factor: 1 },
+          { label: "综合美业集团", meta: "业务承接面广，健康业务基础较好", factor: 0.95 },
+          { label: "皮肤管理", meta: "年轻客群较多，健康需求需要培养", factor: 0.85 },
+          { label: "产康月子中心", meta: "健康需求明确，但客户周期相对集中", factor: 0.85 },
+          { label: "其他服务行业", meta: "健康业务基础不确定，适合先验证", factor: 0.75 },
+          { label: "直客医美", meta: "项目心智偏强，健康转化难度更高", factor: 0.65 }
         ]
       },
       {
@@ -1027,13 +1351,21 @@
     let step = 0;
     const yuan = new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 1 });
 
+    const flowView = document.getElementById("flowView");
+    const introView = document.getElementById("introView");
     const wizardView = document.getElementById("wizardView");
     const resultView = document.getElementById("resultView");
     const optionsEl = document.getElementById("options");
     const nextButton = document.getElementById("nextButton");
     const backButton = document.getElementById("backButton");
-    const downloadReportButton = document.getElementById("downloadReportButton");
+    const reportLeadButton = document.getElementById("reportLeadButton");
+    const leadModal = document.getElementById("leadModal");
+    const leadModalClose = document.getElementById("leadModalClose");
+    const leadForm = document.getElementById("leadForm");
+    const leadPhone = document.getElementById("leadPhone");
+    const leadFormStatus = document.getElementById("leadFormStatus");
     let pendingAdvance = null;
+    let latestResult = null;
 
     function clamp(value, min, max) {
       return Math.min(max, Math.max(min, value));
@@ -1106,15 +1438,16 @@
       const active = getOption("active").value;
       const spend = getOption("spend").value;
       const age = getOption("age");
+      const storeType = getOption("storeType").factor;
       const dual = getOption("dual").value;
       const channel = getOption("channel").multiplier;
 
       const customerBase = Math.round(stores * active);
       const currentRevenue = customerBase * spend;
       const targetPool = Math.round(customerBase * age.pool);
-      const basePen = clamp(0.15 + age.modifier + dual, 0.06, 0.25);
-      const lowPen = clamp(basePen - 0.05, 0.05, 0.18);
-      const highPen = clamp(basePen + 0.05, 0.12, 0.30);
+      const basePen = clamp((0.15 + age.modifier + dual) * storeType, 0.04, 0.25);
+      const lowPen = clamp(basePen - 0.05, 0.04, 0.20);
+      const highPen = clamp(basePen + 0.05, 0.10, 0.33);
 
       const lowLocal = targetPool * lowPen * 30000;
       const midLocal = targetPool * basePen * 40000;
@@ -1147,8 +1480,8 @@
     function judgement(result) {
       if (result.midShare < 0.08) {
         return {
-          title: "先做轻量验证，不急着上重资产",
-          text: "这类盘子更适合用健康沙龙、客户自评和基础检测先筛人。先验证客户愿不愿意为健康结果付费，再决定是否上诊所化投入。"
+          title: "先以合作渠道为主，验证业务可能性",
+          text: "这类盘子暂时不适合一上来重投入自建。建议先借助成熟合作渠道，用老客筛选、健康评估和小范围转化验证客户是否愿意为健康结果付费。"
         };
       }
       if (result.midShare < 0.15) {
@@ -1171,8 +1504,9 @@
 
     function showResult() {
       const result = calculate();
+      latestResult = result;
       const call = judgement(result);
-      wizardView.classList.remove("active");
+      flowView.classList.remove("active");
       resultView.classList.add("active");
       document.getElementById("progressFill").style.width = "100%";
 
@@ -1183,7 +1517,6 @@
       document.getElementById("customerBase").textContent = `${yuan.format(result.customerBase)}人`;
       document.getElementById("targetPool").textContent = `${yuan.format(result.targetPool)}人`;
       document.getElementById("basePenetration").textContent = pct(result.basePen);
-      document.getElementById("midShare").textContent = pct(result.midShare);
 
       document.getElementById("lowDetail").textContent = `年客单价3万 · 渗透率${pct(result.lowPen)}`;
       document.getElementById("midDetail").textContent = `年客单价4万 · 渗透率${pct(result.basePen)}`;
@@ -1194,8 +1527,6 @@
       document.getElementById("midShareSmall").textContent = `占当前营收${pct(result.midShare)}`;
       document.getElementById("highShare").textContent = `占当前营收${pct(result.highShare)}`;
 
-      document.getElementById("midCaption").textContent = `按${yuan.format(result.targetPool)}名高潜客户池测算`;
-      document.getElementById("channelCaption").textContent = `外部合作放大倍率 ×${result.channel}`;
       document.getElementById("formulaLine").textContent =
         `本地诊所基准业绩 = ${yuan.format(result.customerBase)} × ${pct(result.targetPool / result.customerBase)} × ${pct(result.basePen)} × 4万 = ${money(result.midLocal)}`;
       document.getElementById("channelLine").textContent =
@@ -1285,148 +1616,106 @@
       context.textAlign = "left";
     }
 
-    async function downloadReportImage() {
-      const previousText = downloadReportButton.textContent;
-      downloadReportButton.disabled = true;
-      downloadReportButton.textContent = "生成中...";
+    function selectedAnswers() {
+      return Object.fromEntries(questions.map(question => [
+        question.key,
+        question.options[state[question.key]]?.label || ""
+      ]));
+    }
+
+    function buildLeadPayload(phone) {
+      const result = latestResult || calculate();
+      const call = judgement(result);
+      return {
+        phone,
+        submittedAt: new Date().toISOString(),
+        sourcePath: window.location.pathname,
+        answers: selectedAnswers(),
+        result: {
+          judgement: call.title,
+          judgementText: call.text,
+          currentRevenue: result.currentRevenue,
+          customerBase: result.customerBase,
+          targetPool: result.targetPool,
+          basePenetration: result.basePen,
+          localRevenueMid: result.midLocal,
+          localRevenueLow: result.lowLocal,
+          localRevenueHigh: result.highLocal,
+          channelTotal: result.channelTotal,
+          midShare: result.midShare
+        }
+      };
+    }
+
+    function openLeadModal() {
+      leadFormStatus.textContent = "";
+      leadModal.classList.add("active");
+      window.setTimeout(() => leadPhone.focus(), 80);
+    }
+
+    function closeLeadModal() {
+      leadModal.classList.remove("active");
+    }
+
+    async function submitLeadRequest(event) {
+      event.preventDefault();
+      const phone = leadPhone.value.trim().replace(/\s+/g, "");
+      if (!/^1\d{10}$/.test(phone)) {
+        leadFormStatus.textContent = "请填写有效的11位手机号。";
+        return;
+      }
+
+      const payload = buildLeadPayload(phone);
+      window.__lastHealthRevenueLead = payload;
+      try {
+        window.localStorage?.setItem("lastHealthRevenueLead", JSON.stringify(payload));
+      } catch (error) {
+        console.info("Local preview storage is unavailable; lead payload kept in memory.");
+      }
+
+      const submitButton = leadForm.querySelector("button[type='submit']");
+      submitButton.disabled = true;
+      leadFormStatus.textContent = "正在提交测算结果...";
 
       try {
-        if (document.fonts && document.fonts.ready) {
-          await document.fonts.ready;
-        }
-
-        const result = calculate();
-        const call = judgement(result);
-        const width = 1080;
-        const height = 1540;
-        const scale = 2;
-        const canvas = document.createElement("canvas");
-        canvas.width = width * scale;
-        canvas.height = height * scale;
-        const context = canvas.getContext("2d");
-        context.scale(scale, scale);
-        context.textBaseline = "top";
-
-        context.fillStyle = "#f4f3ec";
-        context.fillRect(0, 0, width, height);
-        drawCard(context, 34, 34, width - 68, height - 68, "#fffdf7");
-
-        context.fillStyle = "#2f6958";
-        context.font = "950 22px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-        context.fillText("BUSINESS POTENTIAL REPORT", 74, 72);
-        context.fillStyle = "#1f2621";
-        context.font = "950 58px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-        context.fillText("大健康业务营收潜力测算结果", 74, 112);
-        context.fillStyle = "#70766d";
-        context.font = "500 24px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-        drawWrappedText(context, "这份报告用于判断：在当前客户底盘上，大健康业务一年大概能做出多大新增体量。", 74, 190, 860, 34, 2);
-
-        drawMetric(context, 74, 268, 390, 184, "本地诊所基准年业绩", money(result.midLocal), `按${yuan.format(result.targetPool)}名高潜客户池测算`, true);
-        drawMetric(context, 482, 268, 250, 184, "当前年营收估算", money(result.currentRevenue), "客户底盘 × 当前年消费");
-        drawMetric(context, 750, 268, 256, 184, "含渠道合作总盘", money(result.channelTotal), `外部合作放大倍率 ×${result.channel}`);
-
-        drawCard(context, 74, 482, 432, 284, "#f8f4ea");
-        context.fillStyle = "#1f2621";
-        context.font = "950 28px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-        context.fillText("测算底盘", 98, 508);
-        const facts = [
-          ["活跃客户底盘", `${yuan.format(result.customerBase)}人`],
-          ["高潜客户池", `${yuan.format(result.targetPool)}人`],
-          ["客户池内渗透率", pct(result.basePen)],
-          ["基准占当前营收", pct(result.midShare)]
-        ];
-        facts.forEach((fact, index) => {
-          const col = index % 2;
-          const row = Math.floor(index / 2);
-          const x = 98 + col * 198;
-          const y = 560 + row * 82;
-          context.fillStyle = "#70766d";
-          context.font = "800 19px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-          context.fillText(fact[0], x, y);
-          context.fillStyle = "#1f2621";
-          context.font = "950 32px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-          context.fillText(fact[1], x, y + 30);
+        const response = await fetch("/api/leads", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload)
         });
-
-        drawCard(context, 528, 482, 478, 412, "#fffdf7");
-        context.fillStyle = "#1f2621";
-        context.font = "950 28px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-        context.fillText("三档经营情境", 552, 508);
-        drawScenario(context, 552, 560, 430, "保守情境", `年客单价3万 · 渗透率${pct(result.lowPen)}`, money(result.lowLocal), `占当前营收${pct(result.lowShare)}`);
-        drawScenario(context, 552, 686, 430, "基准情境", `年客单价4万 · 渗透率${pct(result.basePen)}`, money(result.midLocal), `占当前营收${pct(result.midShare)}`);
-        drawScenario(context, 552, 812, 430, "进取情境", `年客单价5万 · 渗透率${pct(result.highPen)}`, money(result.highLocal), `占当前营收${pct(result.highShare)}`);
-
-        drawCard(context, 74, 794, 432, 120, "#f1efe5");
-        context.fillStyle = "#3e463f";
-        context.font = "500 19px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-        context.fillText(`基准 = 客户底盘 × 高潜池 × 渗透率 × 4万`, 96, 818);
-        context.fillText(`= ${yuan.format(result.customerBase)} × ${pct(result.targetPool / result.customerBase)} × ${pct(result.basePen)} × 4万`, 96, 850);
-        context.fillText(`= ${money(result.midLocal)}；渠道总盘 = ${money(result.channelTotal)}`, 96, 882);
-
-        drawCard(context, 74, 928, 932, 158, "#1f2621", "#1f2621");
-        context.fillStyle = "#fff8ea";
-        context.font = "950 34px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-        context.fillText(call.title, 104, 958);
-        context.fillStyle = "#ddd8c9";
-        context.font = "500 23px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-        drawWrappedText(context, call.text, 104, 1012, 862, 32, 2);
-
-        drawCard(context, 74, 1118, 932, 250, "#f8f4ea");
-        context.fillStyle = "#2f6958";
-        context.font = "950 22px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-        context.fillText("NEXT STEP", 104, 1150);
-        context.fillStyle = "#1f2621";
-        context.font = "950 34px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-        context.fillText("想进一步了解课程搭建、品项设计和落地路径？", 104, 1190);
-        context.fillStyle = "#70766d";
-        context.font = "500 23px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-        drawWrappedText(context, "联系 Dr 袁伟畅的企业微信，获取更进一步的资料，包括大健康业务的课程设计、品项组合、客户筛选和团队落地建议。", 104, 1244, 640, 32, 3);
-
-        context.save();
-        context.setLineDash([10, 8]);
-        roundedRect(context, 796, 1150, 150, 150, 10);
-        context.strokeStyle = "#b9b49f";
-        context.lineWidth = 2;
-        context.stroke();
-        context.restore();
-        context.fillStyle = "#173a32";
-        context.font = "950 22px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-        context.textAlign = "center";
-        context.fillText("企业微信", 871, 1200);
-        context.fillText("二维码预留", 871, 1234);
-        context.fillStyle = "#70766d";
-        context.font = "900 20px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-        context.fillText("Dr 袁伟畅 企业微信", 871, 1322);
-        context.textAlign = "left";
-
-        context.fillStyle = "#70766d";
-        context.font = "500 18px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
-        context.fillText("测算为经营判断工具，真实结果取决于客户筛选、医生交付、合规边界、团队销售与复购设计。", 74, 1432);
-
-        const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png", 0.95));
-        if (!blob) {
-          throw new Error("Canvas export returned an empty image.");
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.ok) {
+          throw new Error(data.message || "提交失败，请稍后再试。");
         }
-        const pngUrl = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        const today = new Date().toISOString().slice(0, 10);
-        link.href = pngUrl;
-        link.download = `大健康营收潜力测算报告-${today}.png`;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        window.setTimeout(() => URL.revokeObjectURL(pngUrl), 1000);
+
+        leadForm.dataset.payloadReady = "true";
+        leadForm.dataset.leadPhone = phone;
+        leadFormStatus.textContent = data.emailSent
+          ? "已提交，完整报告提醒已发送给团队。"
+          : "已提交，我们会尽快发送完整评估报告。";
       } catch (error) {
-        console.error(error);
-        window.alert("图片报告生成失败。可以先用截图保存这一页，我会再继续优化导出方式。");
+        const isLocalPreview = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
+        leadFormStatus.textContent = isLocalPreview
+          ? "当前是本地预览，部署到 Cloudflare 后会自动写入后台表格。"
+          : (error.message || "提交失败，请稍后再试。");
+        console.error("Lead submit failed", error);
       } finally {
-        downloadReportButton.disabled = false;
-        downloadReportButton.textContent = previousText;
+        submitButton.disabled = false;
       }
     }
 
     nextButton.addEventListener("click", advance);
-    downloadReportButton.addEventListener("click", downloadReportImage);
+    reportLeadButton.addEventListener("click", openLeadModal);
+    leadModalClose.addEventListener("click", closeLeadModal);
+    leadModal.addEventListener("click", event => {
+      if (event.target === leadModal) closeLeadModal();
+    });
+    leadForm.addEventListener("submit", submitLeadRequest);
+    document.getElementById("startButton").addEventListener("click", () => {
+      introView.classList.remove("active");
+      wizardView.classList.add("active");
+      renderStep();
+    });
     backButton.addEventListener("click", () => {
       if (step === 0) return;
       step -= 1;
@@ -1437,7 +1726,9 @@
       step = 0;
       Object.keys(state).forEach(key => delete state[key]);
       resultView.classList.remove("active");
-      wizardView.classList.add("active");
+      flowView.classList.add("active");
+      wizardView.classList.remove("active");
+      introView.classList.add("active");
       renderStep();
     });
 

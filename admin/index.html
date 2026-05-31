@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>测算线索后台｜Dr Yuan</title>
+  <style>
+    :root {
+      --moss: #2f6958;
+      --deep: #163f35;
+      --ink: #1f2621;
+      --muted: #687066;
+      --paper: #fffdf7;
+      --warm: #f2f0eb;
+      --line: #d9d3c5;
+      --clay: #a65f45;
+      --radius: 8px;
+      --shadow: 0 18px 50px rgba(40, 52, 45, 0.12);
+      --cn: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--warm);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", var(--cn);
+      line-height: 1.5;
+      letter-spacing: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 46px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand span {
+      color: var(--moss);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(30px, 5vw, 54px);
+      line-height: 1.05;
+    }
+
+    .home-link {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--moss);
+      background: rgba(255, 253, 247, 0.76);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .panel {
+      padding: clamp(18px, 3vw, 28px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .login-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    label {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    input {
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--ink);
+      background: #fff;
+      outline: 0;
+    }
+
+    input:focus {
+      border-color: var(--moss);
+      box-shadow: 0 0 0 4px rgba(47, 105, 88, 0.12);
+    }
+
+    .button {
+      min-height: 46px;
+      padding: 0 18px;
+      border: 1px solid var(--moss);
+      border-radius: var(--radius);
+      background: var(--moss);
+      color: #fff;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .button.secondary {
+      color: var(--moss);
+      background: transparent;
+    }
+
+    .button:disabled {
+      cursor: default;
+      opacity: 0.55;
+    }
+
+    .status {
+      min-height: 24px;
+      margin-top: 12px;
+      color: var(--clay);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .metric {
+      padding: 16px;
+      border-radius: var(--radius);
+      background: #f4f1e9;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--deep);
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #ebe6da;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      background: #f7f4ec;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .phone {
+      color: var(--deep);
+      font-size: 17px;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .judgement {
+      max-width: 240px;
+      font-weight: 850;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .empty {
+      padding: 44px 20px;
+      color: var(--muted);
+      text-align: center;
+      font-weight: 800;
+    }
+
+    @media (max-width: 760px) {
+      .topbar,
+      .login-row {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .topbar {
+        display: grid;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      .home-link,
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span>Lead Admin</span>
+        <h1>测算线索后台</h1>
+      </div>
+      <a class="home-link" href="/">返回首页</a>
+    </header>
+
+    <section class="panel" aria-label="后台登录">
+      <div class="login-row">
+        <label>
+          后台访问 Token
+          <input id="tokenInput" type="password" autocomplete="current-password" placeholder="输入 Cloudflare 里设置的 ADMIN_TOKEN">
+        </label>
+        <button class="button" id="loadButton" type="button">查看记录</button>
+        <button class="button secondary" id="exportButton" type="button" disabled>导出 CSV</button>
+      </div>
+      <div class="status" id="status" aria-live="polite"></div>
+    </section>
+
+    <section class="summary" aria-label="线索概览">
+      <div class="metric"><span>已加载记录</span><strong id="totalMetric">0</strong></div>
+      <div class="metric"><span>最新提交</span><strong id="latestMetric">-</strong></div>
+      <div class="metric"><span>邮件提醒</span><strong id="emailMetric">-</strong></div>
+    </section>
+
+    <section class="panel">
+      <div class="table-wrap" id="tableWrap">
+        <div class="empty">输入后台 Token 后查看记录。</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const tokenInput = document.getElementById("tokenInput");
+    const loadButton = document.getElementById("loadButton");
+    const exportButton = document.getElementById("exportButton");
+    const statusEl = document.getElementById("status");
+    const tableWrap = document.getElementById("tableWrap");
+    const totalMetric = document.getElementById("totalMetric");
+    const latestMetric = document.getElementById("latestMetric");
+    const emailMetric = document.getElementById("emailMetric");
+    const savedToken = window.sessionStorage.getItem("drYuanLeadAdminToken");
+
+    if (savedToken) tokenInput.value = savedToken;
+
+    function authHeaders() {
+      return { authorization: `Bearer ${tokenInput.value.trim()}` };
+    }
+
+    function formatWan(value) {
+      const number = Number(value);
+      if (!Number.isFinite(number)) return "-";
+      return `${(number / 10000).toLocaleString("zh-CN", { maximumFractionDigits: 1 })}万`;
+    }
+
+    function formatPercent(value) {
+      const number = Number(value);
+      if (!Number.isFinite(number)) return "-";
+      return `${(number * 100).toFixed(1)}%`;
+    }
+
+    function formatDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value || "-";
+      return date.toLocaleString("zh-CN", {
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderRows(rows) {
+      if (!rows.length) {
+        tableWrap.innerHTML = '<div class="empty">目前还没有提交记录。</div>';
+        return;
+      }
+
+      tableWrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>提交时间</th>
+              <th>手机号</th>
+              <th>初步结论</th>
+              <th>本地基准</th>
+              <th>渠道总盘</th>
+              <th>渗透率</th>
+              <th>门店类型</th>
+              <th>门店规模</th>
+              <th>年龄结构</th>
+              <th>邮件</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(row => `
+              <tr>
+                <td>${escapeHtml(formatDate(row.submittedAt))}<div class="muted">#${escapeHtml(row.id)}</div></td>
+                <td><span class="phone">${escapeHtml(row.phone)}</span></td>
+                <td class="judgement">${escapeHtml(row.judgement || "-")}</td>
+                <td>${escapeHtml(formatWan(row.localRevenueMid))}</td>
+                <td>${escapeHtml(formatWan(row.channelTotal))}</td>
+                <td>${escapeHtml(formatPercent(row.basePenetration))}</td>
+                <td>${escapeHtml(row.answers?.storeType || "-")}</td>
+                <td>${escapeHtml(row.answers?.stores || "-")}</td>
+                <td>${escapeHtml(row.answers?.age || "-")}</td>
+                <td>${row.emailSent ? "已发送" : "未发送"}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    async function loadLeads() {
+      const token = tokenInput.value.trim();
+      if (!token) {
+        statusEl.textContent = "请输入后台访问 Token。";
+        return;
+      }
+
+      loadButton.disabled = true;
+      statusEl.textContent = "正在读取记录...";
+
+      try {
+        const response = await fetch("/api/admin/leads?limit=100", {
+          headers: authHeaders()
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.message || "读取失败");
+
+        window.sessionStorage.setItem("drYuanLeadAdminToken", token);
+        renderRows(data.rows || []);
+        totalMetric.textContent = data.rows.length;
+        latestMetric.textContent = data.rows[0] ? formatDate(data.rows[0].submittedAt) : "-";
+        emailMetric.textContent = data.rows.some(row => row.emailSent) ? "已开启" : "待配置";
+        exportButton.disabled = false;
+        statusEl.textContent = "已读取最新记录。";
+      } catch (error) {
+        statusEl.textContent = error.message || "读取失败，请检查 Token 或后台配置。";
+        exportButton.disabled = true;
+      } finally {
+        loadButton.disabled = false;
+      }
+    }
+
+    async function exportCsv() {
+      exportButton.disabled = true;
+      statusEl.textContent = "正在生成 CSV...";
+
+      try {
+        const response = await fetch("/api/admin/leads?limit=300&format=csv", {
+          headers: authHeaders()
+        });
+        if (!response.ok) throw new Error("导出失败，请重新查看记录后再试。");
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `health-revenue-leads-${new Date().toISOString().slice(0, 10)}.csv`;
+        link.click();
+        URL.revokeObjectURL(url);
+        statusEl.textContent = "CSV 已导出。";
+      } catch (error) {
+        statusEl.textContent = error.message || "导出失败。";
+      } finally {
+        exportButton.disabled = false;
+      }
+    }
+
+    loadButton.addEventListener("click", loadLeads);
+    exportButton.addEventListener("click", exportCsv);
+    tokenInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") loadLeads();
+    });
+  </script>
+</body>
+</html>
