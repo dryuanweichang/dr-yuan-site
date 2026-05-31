@@ -1,0 +1,1447 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>大健康营收潜力测算器 V3</title>
+  <style>
+    :root {
+      --canvas: #f4f3ec;
+      --paper: #fffdf7;
+      --paper-strong: #ffffff;
+      --ink: #1f2621;
+      --ink-soft: #3e463f;
+      --muted: #70766d;
+      --line: #d8d6ca;
+      --line-strong: #b9b49f;
+      --moss: #2f6958;
+      --moss-deep: #173a32;
+      --moss-soft: #e3eee8;
+      --brass: #aa7c38;
+      --clay: #a65f45;
+      --blue: #315d73;
+      --shadow: 0 22px 55px rgba(30, 36, 31, 0.12);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--canvas);
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(47, 105, 88, 0.12) 0, rgba(47, 105, 88, 0) 280px),
+        var(--canvas);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      width: min(1180px, calc(100% - 32px));
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 24px 0 34px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 18px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--ink-soft);
+    }
+
+    .mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .mark::before {
+      width: 10px;
+      height: 10px;
+      content: "";
+      border-radius: 50%;
+      background: var(--moss);
+      box-shadow: 16px 0 0 var(--brass), 32px 0 0 var(--clay);
+      flex: 0 0 auto;
+      margin-right: 32px;
+    }
+
+    .top-note {
+      color: var(--muted);
+      font-size: 12px;
+      text-align: right;
+    }
+
+    .stage {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .stage-inner {
+      min-height: 660px;
+      display: grid;
+      grid-template-columns: minmax(260px, 0.64fr) minmax(0, 1.36fr);
+    }
+
+    .side {
+      padding: 34px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 28px;
+      color: #f7f2e8;
+      background: var(--moss-deep);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #b8cfc5;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 430px;
+      font-size: clamp(30px, 4vw, 50px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .side-copy {
+      max-width: 380px;
+      margin: 16px 0 0;
+      color: #d7e0d9;
+      font-size: 15px;
+    }
+
+    .model-card {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .model-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #ffffff;
+      font-size: 14px;
+    }
+
+    .model-card p {
+      margin: 0;
+      color: #c9d6cf;
+      font-size: 13px;
+    }
+
+    .question-area {
+      padding: 34px clamp(22px, 4vw, 52px);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 22px;
+      background: var(--paper);
+    }
+
+    .progress-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .track {
+      height: 6px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e4e1d5;
+    }
+
+    .fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--moss), var(--brass));
+      transition: width 220ms ease;
+    }
+
+    .question {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .question-kicker {
+      color: var(--moss);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .question-title {
+      max-width: 720px;
+      margin: 0;
+      font-size: clamp(25px, 4.2vw, 42px);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .question-help {
+      max-width: 640px;
+      margin: -12px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .options.compact {
+      grid-template-columns: repeat(auto-fit, minmax(156px, 1fr));
+    }
+
+    .choice {
+      min-height: 74px;
+      padding: 15px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper-strong);
+      color: var(--ink);
+      cursor: pointer;
+      text-align: left;
+      overflow-wrap: anywhere;
+      transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+    }
+
+    .choice:hover {
+      border-color: var(--moss);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(31, 38, 33, 0.08);
+    }
+
+    .choice[aria-pressed="true"] {
+      border-color: var(--moss);
+      background: var(--moss-soft);
+      box-shadow: inset 0 0 0 1px var(--moss);
+    }
+
+    .choice-title {
+      display: block;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .choice-meta {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.3;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 44px;
+    }
+
+    .text-button,
+    .primary-button {
+      min-height: 42px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 900;
+      letter-spacing: 0;
+      transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease, opacity 150ms ease;
+    }
+
+    .text-button {
+      padding: 0 4px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .text-button:hover {
+      color: var(--ink);
+    }
+
+    .primary-button {
+      padding: 0 18px;
+      border: 1px solid var(--moss);
+      background: var(--moss);
+      color: #ffffff;
+    }
+
+    .primary-button:hover {
+      transform: translateY(-1px);
+      background: #255848;
+    }
+
+    .primary-button:disabled {
+      cursor: default;
+      opacity: 0.45;
+      transform: none;
+    }
+
+    .result-view {
+      display: none;
+      padding: 34px clamp(18px, 4vw, 46px);
+      background: var(--paper);
+    }
+
+    .result-view.active {
+      display: block;
+    }
+
+    .wizard-view.active {
+      display: grid;
+    }
+
+    .wizard-view {
+      display: none;
+    }
+
+    .report-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .report-head h2 {
+      margin: 0;
+      max-width: 720px;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    .report-head p {
+      max-width: 700px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .reset-button {
+      min-height: 40px;
+      padding: 0 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .report-actions {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .secondary-button,
+    .download-button {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 14px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 950;
+      line-height: 1;
+      text-decoration: none;
+      transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease, opacity 150ms ease;
+    }
+
+    .download-button {
+      border: 1px solid var(--moss);
+      background: var(--moss);
+      color: #ffffff;
+    }
+
+    .secondary-button {
+      border: 1px solid var(--brass);
+      background: #f4ecdc;
+      color: #6e4b17;
+    }
+
+    .download-button:hover,
+    .secondary-button:hover,
+    .reset-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .download-button:disabled {
+      cursor: default;
+      opacity: 0.55;
+      transform: none;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .hero-metric,
+    .report-card,
+    .scenario {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper-strong);
+    }
+
+    .hero-metric {
+      min-height: 150px;
+      padding: 18px;
+    }
+
+    .hero-metric.primary {
+      color: #fffaf0;
+      background: var(--moss-deep);
+      border-color: var(--moss-deep);
+    }
+
+    .metric-label {
+      color: inherit;
+      opacity: 0.72;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .metric-value {
+      margin-top: 12px;
+      color: inherit;
+      font-size: clamp(30px, 5vw, 54px);
+      line-height: 1.08;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .metric-caption {
+      margin-top: 10px;
+      color: inherit;
+      opacity: 0.68;
+      font-size: 12px;
+    }
+
+    .report-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .report-card {
+      padding: 18px;
+    }
+
+    .report-card h3 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .fact {
+      padding: 12px;
+      border-radius: var(--radius);
+      background: #f6f5ef;
+    }
+
+    .fact span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .fact strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    .scenarios {
+      display: grid;
+      gap: 10px;
+    }
+
+    .scenario {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      padding: 14px;
+      align-items: center;
+    }
+
+    .scenario-title {
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .scenario-detail {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .scenario-money {
+      color: var(--moss);
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 950;
+      text-align: right;
+    }
+
+    .scenario-share {
+      margin-top: 5px;
+      color: var(--clay);
+      font-size: 12px;
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .judgement {
+      margin-top: 12px;
+      padding: 18px;
+      border-radius: var(--radius);
+      background: #1f2621;
+      color: #fff8ea;
+    }
+
+    .judgement h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .judgement p {
+      margin: 0;
+      color: #ddd8c9;
+      font-size: 14px;
+    }
+
+    .lead-card {
+      margin-top: 12px;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 168px;
+      gap: 18px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #f8f4ea;
+    }
+
+    .lead-card h3 {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .lead-card p {
+      max-width: 720px;
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .lead-kicker {
+      margin: 0 0 9px;
+      color: var(--moss);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .wechat-slot {
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .qr-box {
+      width: 132px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(47, 105, 88, 0.08) 25%, transparent 25%),
+        linear-gradient(225deg, rgba(47, 105, 88, 0.08) 25%, transparent 25%),
+        #fffdf7;
+      color: var(--moss-deep);
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .formula {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: #f1efe5;
+      color: var(--ink-soft);
+      font-size: 13px;
+    }
+
+    .capture-sandbox {
+      position: fixed;
+      left: -12000px;
+      top: 0;
+      width: 1080px;
+      pointer-events: none;
+      opacity: 0;
+      z-index: -1;
+    }
+
+    .capture-export {
+      width: 1080px;
+      padding: 38px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+
+    .capture-export .report-head {
+      grid-template-columns: 1fr;
+    }
+
+    .capture-export .hero-metrics {
+      grid-template-columns: 1.1fr 1fr 1fr;
+    }
+
+    .capture-export .report-grid {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+
+    .capture-export .lead-card {
+      grid-template-columns: minmax(0, 1fr) 180px;
+    }
+
+    .formula code {
+      white-space: normal;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .footnote {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .stage-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        min-height: 280px;
+      }
+
+      .model-card {
+        display: none;
+      }
+
+      .hero-metrics,
+      .report-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .app {
+        width: min(100% - 20px, 1180px);
+        padding-top: 14px;
+      }
+
+      .topbar,
+      .report-head {
+        align-items: start;
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .top-note {
+        text-align: left;
+      }
+
+      .side {
+        padding: 24px 18px;
+      }
+
+      .question-area,
+      .result-view {
+        padding: 24px 16px;
+      }
+
+      .options,
+      .options.compact,
+      .facts {
+        grid-template-columns: 1fr;
+      }
+
+      .choice {
+        min-height: 66px;
+      }
+
+      .scenario {
+        grid-template-columns: 1fr;
+      }
+
+      .scenario-money,
+      .scenario-share {
+        text-align: left;
+      }
+
+      .report-actions {
+        justify-content: flex-start;
+      }
+
+      .secondary-button,
+      .download-button,
+      .reset-button {
+        width: 100%;
+      }
+
+      .lead-card {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="mark">大健康营收潜力测算器</div>
+      <div class="top-note">不需要填写真实总营收 · 所有数字均按区间估算</div>
+    </header>
+
+    <section class="stage" aria-label="大健康营收潜力测算器">
+      <div class="stage-inner">
+        <aside class="side">
+          <div>
+            <p class="eyebrow">LONGEVITY BUSINESS MODEL</p>
+            <h1>先算一年可能新增多少营收</h1>
+            <p class="side-copy">用客户底盘、消费能力、年龄画像和双美基础，估算机构导入大健康业务后的本地诊所业绩与渠道放大空间。</p>
+          </div>
+          <div class="model-card">
+            <strong>底层模型</strong>
+            <p>活跃客户底盘 × 高潜客户池比例 × 大健康渗透率 × 年客单价。结果是经营判断工具，不是财务承诺。</p>
+          </div>
+        </aside>
+
+        <section class="question-area wizard-view active" id="wizardView">
+          <div class="progress-row">
+            <span id="stepLabel">第 1 / 6 题</span>
+            <div class="track" aria-hidden="true"><div class="fill" id="progressFill"></div></div>
+            <span id="stepShort">门店</span>
+          </div>
+
+          <div class="question" aria-live="polite">
+            <div>
+              <div class="question-kicker" id="questionKicker">经营规模</div>
+              <h2 class="question-title" id="questionTitle">目前正在经营的门店规模更接近哪一档？</h2>
+              <p class="question-help" id="questionHelp">门店数用区间中位数估算，不需要填写精确数量。</p>
+            </div>
+            <div class="options" id="options"></div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="text-button" id="backButton">上一步</button>
+            <button type="button" class="primary-button" id="nextButton" disabled>下一题</button>
+          </div>
+        </section>
+
+        <section class="result-view" id="resultView" aria-label="测算结果">
+          <div id="reportCapture">
+          <div class="report-head">
+            <div>
+              <p class="eyebrow" style="color: var(--moss); margin-bottom: 10px;">BUSINESS POTENTIAL REPORT</p>
+              <h2>大健康业务营收潜力测算结果</h2>
+              <p>这份结果先回答老板最关心的问题：在当前客户底盘上，这个新业务一年大概能做出多大体量。</p>
+            </div>
+            <div class="report-actions" data-capture-exclude>
+              <button type="button" class="download-button" id="downloadReportButton">生成图片报告</button>
+              <a class="secondary-button" href="./assessment.html">继续做适配评估</a>
+              <button type="button" class="reset-button" id="resetButton">重新测算</button>
+            </div>
+          </div>
+
+          <div class="hero-metrics">
+            <div class="hero-metric primary">
+              <div class="metric-label">本地诊所基准年业绩</div>
+              <div class="metric-value" id="midLocal">0万</div>
+              <div class="metric-caption" id="midCaption">按4万年客单价测算</div>
+            </div>
+            <div class="hero-metric">
+              <div class="metric-label">当前年营收估算</div>
+              <div class="metric-value" id="currentRevenue">0万</div>
+              <div class="metric-caption">客户底盘 × 当前年消费</div>
+            </div>
+            <div class="hero-metric">
+              <div class="metric-label">含渠道合作总盘</div>
+              <div class="metric-value" id="channelTotal">0万</div>
+              <div class="metric-caption" id="channelCaption">按选择的渠道放大倍率估算</div>
+            </div>
+          </div>
+
+          <div class="report-grid">
+            <div class="report-card">
+              <h3>测算底盘</h3>
+              <div class="facts">
+                <div class="fact"><span>活跃客户底盘</span><strong id="customerBase">0人</strong></div>
+                <div class="fact"><span>高潜客户池</span><strong id="targetPool">0人</strong></div>
+                <div class="fact"><span>客户池内渗透率</span><strong id="basePenetration">0%</strong></div>
+                <div class="fact"><span>基准占当前营收</span><strong id="midShare">0%</strong></div>
+              </div>
+
+              <div class="formula">
+                <code id="formulaLine">本地诊所基准业绩 = 0 × 0% × 0% × 4万 = 0万</code>
+                <code id="channelLine">含渠道合作总盘 = 本地诊所业绩 × 1 = 0万</code>
+              </div>
+            </div>
+
+            <div class="report-card">
+              <h3>三档经营情境</h3>
+              <div class="scenarios">
+                <div class="scenario">
+                  <div>
+                    <div class="scenario-title">保守情境</div>
+                    <div class="scenario-detail" id="lowDetail">年客单价3万 · 渗透率0%</div>
+                  </div>
+                  <div>
+                    <div class="scenario-money" id="lowLocal">0万</div>
+                    <div class="scenario-share" id="lowShare">占当前营收0%</div>
+                  </div>
+                </div>
+                <div class="scenario">
+                  <div>
+                    <div class="scenario-title">基准情境</div>
+                    <div class="scenario-detail" id="midDetail">年客单价4万 · 渗透率0%</div>
+                  </div>
+                  <div>
+                    <div class="scenario-money" id="midLocalSmall">0万</div>
+                    <div class="scenario-share" id="midShareSmall">占当前营收0%</div>
+                  </div>
+                </div>
+                <div class="scenario">
+                  <div>
+                    <div class="scenario-title">进取情境</div>
+                    <div class="scenario-detail" id="highDetail">年客单价5万 · 渗透率0%</div>
+                  </div>
+                  <div>
+                    <div class="scenario-money" id="highLocal">0万</div>
+                    <div class="scenario-share" id="highShare">占当前营收0%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="judgement">
+            <h3 id="judgementTitle">这是一个值得认真验证的新业务板块</h3>
+            <p id="judgementText">先用小范围客户筛选、健康评估和轻量项目跑通闭环，再决定是否进入诊所化和系统化投入。</p>
+          </div>
+
+          <div class="lead-card">
+            <div>
+              <div class="lead-kicker">NEXT STEP</div>
+              <h3>想进一步了解课程搭建、品项设计和落地路径？</h3>
+              <p>可以联系 Dr 袁伟畅的企业微信，获取更进一步的资料，包括大健康业务的课程设计、品项组合、客户筛选和团队落地建议。</p>
+            </div>
+            <div class="wechat-slot">
+              <div class="qr-box">企业微信<br>二维码预留</div>
+              <span>Dr 袁伟畅 企业微信</span>
+            </div>
+          </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <p class="footnote">测算为经营判断工具。真实结果取决于客户筛选、医生交付、合规边界、团队销售、复购设计与本地资源配置。</p>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        key: "stores",
+        short: "门店",
+        kicker: "经营规模",
+        title: "目前正在经营的门店规模更接近哪一档？",
+        help: "门店数用区间中位数估算，不需要填写精确数量。",
+        compact: true,
+        options: [
+          { label: "1家", meta: "单店模型", value: 1 },
+          { label: "2-3家", meta: "小连锁", value: 2.5 },
+          { label: "4-5家", meta: "区域连锁", value: 4.5 },
+          { label: "6-9家", meta: "成熟连锁", value: 7.5 },
+          { label: "10-14家", meta: "集团起步", value: 12 },
+          { label: "15-19家", meta: "区域集团", value: 17 },
+          { label: "20-29家", meta: "多城布局", value: 25 },
+          { label: "30-39家", meta: "集团化运营", value: 35 },
+          { label: "40-49家", meta: "规模集团", value: 45 },
+          { label: "50家以上", meta: "大型集团", value: 60 }
+        ]
+      },
+      {
+        key: "active",
+        short: "活跃顾客",
+        kicker: "客户底盘",
+        title: "单店近3个月活跃顾客数大概在哪个区间？",
+        help: "这里看的是近三个月至少到店一次的顾客，不是会员总数。",
+        compact: true,
+        options: [
+          { label: "50人以下", meta: "客户底盘偏薄", value: 40 },
+          { label: "50-100人", meta: "偏弱门店", value: 75 },
+          { label: "100-200人", meta: "一般门店", value: 150 },
+          { label: "200-300人", meta: "稳定门店", value: 250 },
+          { label: "300-500人", meta: "优质门店", value: 400 },
+          { label: "500人以上", meta: "强客流门店", value: 600 }
+        ]
+      },
+      {
+        key: "spend",
+        short: "年消费",
+        kicker: "消费能力",
+        title: "单个顾客目前平均年消费更接近哪一档？",
+        help: "按所有业务合计估算，避免直接填写机构真实总营收。",
+        compact: true,
+        options: [
+          { label: "5000元以下", meta: "基础消费", value: 4000 },
+          { label: "5000-1万元", meta: "一般消费", value: 7500 },
+          { label: "1万-1.5万元", meta: "稳定客单", value: 12500 },
+          { label: "1.5万-2万元", meta: "高客单基础", value: 17500 },
+          { label: "2万-3万元", meta: "高消费门店", value: 25000 },
+          { label: "3万元以上", meta: "强高客", value: 35000 }
+        ]
+      },
+      {
+        key: "age",
+        short: "年龄",
+        kicker: "客户画像",
+        title: "主力顾客年龄结构更接近哪一种？",
+        help: "年龄结构会影响大健康业务的高潜客户池比例和渗透率。",
+        compact: false,
+        options: [
+          { label: "35岁以下为主", meta: "健康意识在培养期", pool: 0.22, modifier: -0.03 },
+          { label: "35-44岁为主", meta: "开始关注抗衰与慢病风险", pool: 0.35, modifier: 0 },
+          { label: "45-54岁为主", meta: "更容易进入健康管理需求", pool: 0.5, modifier: 0.03 },
+          { label: "55岁以上较多", meta: "健康支付动机更强", pool: 0.62, modifier: 0.05 },
+          { label: "年龄结构较均衡", meta: "按混合型客户池测算", pool: 0.42, modifier: 0.015 }
+        ]
+      },
+      {
+        key: "dual",
+        short: "双美基础",
+        kicker: "组织经验",
+        title: "双美 / 医美业务大概占集团业务的多少？",
+        help: "这不是问总营收，而是看团队是否有承接二元业务和高客单转化的经验。",
+        compact: false,
+        options: [
+          { label: "5%以内", meta: "几乎没跑过", value: -0.04 },
+          { label: "5%-10%", meta: "刚开始有基础", value: -0.02 },
+          { label: "10%-20%", meta: "已有一定经验", value: 0 },
+          { label: "20%-35%", meta: "承接能力较成熟", value: 0.03 },
+          { label: "35%以上", meta: "高客单组织能力强", value: 0.05 }
+        ]
+      },
+      {
+        key: "channel",
+        short: "渠道",
+        kicker: "放大空间",
+        title: "这次结果是否纳入外部渠道合作空间？",
+        help: "本地诊所是基本盘；如果未来能做渠道合作，整体业务盘子会被放大。",
+        compact: false,
+        options: [
+          { label: "暂不纳入", meta: "只看本地诊所业绩", multiplier: 1 },
+          { label: "保守纳入", meta: "按本地诊所的0.5倍放大", multiplier: 1.5 },
+          { label: "按1:1纳入", meta: "本地诊所与渠道合作各一半", multiplier: 2 }
+        ]
+      }
+    ];
+
+    const state = {};
+    let step = 0;
+    const yuan = new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 1 });
+
+    const wizardView = document.getElementById("wizardView");
+    const resultView = document.getElementById("resultView");
+    const optionsEl = document.getElementById("options");
+    const nextButton = document.getElementById("nextButton");
+    const backButton = document.getElementById("backButton");
+    const downloadReportButton = document.getElementById("downloadReportButton");
+    let pendingAdvance = null;
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function money(value) {
+      if (value >= 100000000) return `${yuan.format(value / 100000000)}亿`;
+      if (value >= 10000) return `${yuan.format(value / 10000)}万`;
+      return `${yuan.format(value)}元`;
+    }
+
+    function pct(value) {
+      return `${(value * 100).toFixed(1)}%`;
+    }
+
+    function renderStep() {
+      const question = questions[step];
+      const selected = state[question.key];
+      document.getElementById("stepLabel").textContent = `第 ${step + 1} / ${questions.length} 题`;
+      document.getElementById("stepShort").textContent = question.short;
+      document.getElementById("questionKicker").textContent = question.kicker;
+      document.getElementById("questionTitle").textContent = question.title;
+      document.getElementById("questionHelp").textContent = question.help;
+      document.getElementById("progressFill").style.width = `${(step / questions.length) * 100}%`;
+      optionsEl.className = question.compact ? "options compact" : "options";
+      optionsEl.innerHTML = "";
+
+      question.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "choice";
+        button.setAttribute("aria-pressed", selected === index ? "true" : "false");
+        button.innerHTML = `<span class="choice-title">${option.label}</span><span class="choice-meta">${option.meta}</span>`;
+        button.addEventListener("click", () => {
+          state[question.key] = index;
+          nextButton.disabled = false;
+          renderStep();
+          if (pendingAdvance) window.clearTimeout(pendingAdvance);
+          pendingAdvance = window.setTimeout(() => advance(), 140);
+        });
+        optionsEl.appendChild(button);
+      });
+
+      backButton.style.visibility = step === 0 ? "hidden" : "visible";
+      nextButton.disabled = selected === undefined;
+      nextButton.textContent = step === questions.length - 1 ? "查看结果" : "下一题";
+    }
+
+    function advance() {
+      if (pendingAdvance) {
+        window.clearTimeout(pendingAdvance);
+        pendingAdvance = null;
+      }
+      if (state[questions[step].key] === undefined) return;
+      if (step < questions.length - 1) {
+        step += 1;
+        renderStep();
+        return;
+      }
+      showResult();
+    }
+
+    function getOption(key) {
+      const question = questions.find(item => item.key === key);
+      return question.options[state[key]];
+    }
+
+    function calculate() {
+      const stores = getOption("stores").value;
+      const active = getOption("active").value;
+      const spend = getOption("spend").value;
+      const age = getOption("age");
+      const dual = getOption("dual").value;
+      const channel = getOption("channel").multiplier;
+
+      const customerBase = Math.round(stores * active);
+      const currentRevenue = customerBase * spend;
+      const targetPool = Math.round(customerBase * age.pool);
+      const basePen = clamp(0.15 + age.modifier + dual, 0.06, 0.25);
+      const lowPen = clamp(basePen - 0.05, 0.05, 0.18);
+      const highPen = clamp(basePen + 0.05, 0.12, 0.30);
+
+      const lowLocal = targetPool * lowPen * 30000;
+      const midLocal = targetPool * basePen * 40000;
+      const highLocal = targetPool * highPen * 50000;
+      const lowShare = currentRevenue ? lowLocal / currentRevenue : 0;
+      const midShare = currentRevenue ? midLocal / currentRevenue : 0;
+      const highShare = currentRevenue ? highLocal / currentRevenue : 0;
+
+      return {
+        stores,
+        active,
+        spend,
+        channel,
+        customerBase,
+        currentRevenue,
+        targetPool,
+        basePen,
+        lowPen,
+        highPen,
+        lowLocal,
+        midLocal,
+        highLocal,
+        lowShare,
+        midShare,
+        highShare,
+        channelTotal: midLocal * channel
+      };
+    }
+
+    function judgement(result) {
+      if (result.midShare < 0.08) {
+        return {
+          title: "先做轻量验证，不急着上重资产",
+          text: "这类盘子更适合用健康沙龙、客户自评和基础检测先筛人。先验证客户愿不愿意为健康结果付费，再决定是否上诊所化投入。"
+        };
+      }
+      if (result.midShare < 0.15) {
+        return {
+          title: "这是一个值得认真经营的新业务板块",
+          text: "基准测算已经接近或超过10%的业务占比。建议先用30-90天跑通客户筛选、评估、体验、转疗程和复购路径。"
+        };
+      }
+      if (result.customerBase >= 1000 || result.midLocal >= 3000000) {
+        return {
+          title: "具备系统化规划价值，但要先设计交付能力",
+          text: "盘子已经足够大。下一步重点不是再找项目，而是明确本地诊所、医生资源、员工激励、合规表达和渠道合作的分工。"
+        };
+      }
+      return {
+        title: "潜力较高，但要防止测算乐观",
+        text: "占比看起来不错，说明客户年消费或渗透率假设偏强。建议先用一批老客打样，确认真实付费和复购，再放大投入。"
+      };
+    }
+
+    function showResult() {
+      const result = calculate();
+      const call = judgement(result);
+      wizardView.classList.remove("active");
+      resultView.classList.add("active");
+      document.getElementById("progressFill").style.width = "100%";
+
+      document.getElementById("midLocal").textContent = money(result.midLocal);
+      document.getElementById("midLocalSmall").textContent = money(result.midLocal);
+      document.getElementById("currentRevenue").textContent = money(result.currentRevenue);
+      document.getElementById("channelTotal").textContent = money(result.channelTotal);
+      document.getElementById("customerBase").textContent = `${yuan.format(result.customerBase)}人`;
+      document.getElementById("targetPool").textContent = `${yuan.format(result.targetPool)}人`;
+      document.getElementById("basePenetration").textContent = pct(result.basePen);
+      document.getElementById("midShare").textContent = pct(result.midShare);
+
+      document.getElementById("lowDetail").textContent = `年客单价3万 · 渗透率${pct(result.lowPen)}`;
+      document.getElementById("midDetail").textContent = `年客单价4万 · 渗透率${pct(result.basePen)}`;
+      document.getElementById("highDetail").textContent = `年客单价5万 · 渗透率${pct(result.highPen)}`;
+      document.getElementById("lowLocal").textContent = money(result.lowLocal);
+      document.getElementById("highLocal").textContent = money(result.highLocal);
+      document.getElementById("lowShare").textContent = `占当前营收${pct(result.lowShare)}`;
+      document.getElementById("midShareSmall").textContent = `占当前营收${pct(result.midShare)}`;
+      document.getElementById("highShare").textContent = `占当前营收${pct(result.highShare)}`;
+
+      document.getElementById("midCaption").textContent = `按${yuan.format(result.targetPool)}名高潜客户池测算`;
+      document.getElementById("channelCaption").textContent = `外部合作放大倍率 ×${result.channel}`;
+      document.getElementById("formulaLine").textContent =
+        `本地诊所基准业绩 = ${yuan.format(result.customerBase)} × ${pct(result.targetPool / result.customerBase)} × ${pct(result.basePen)} × 4万 = ${money(result.midLocal)}`;
+      document.getElementById("channelLine").textContent =
+        `含渠道合作总盘 = 本地诊所业绩 × ${result.channel} = ${money(result.channelTotal)}`;
+      document.getElementById("judgementTitle").textContent = call.title;
+      document.getElementById("judgementText").textContent = call.text;
+    }
+
+    function roundedRect(context, x, y, width, height, radius) {
+      const r = Math.min(radius, width / 2, height / 2);
+      context.beginPath();
+      context.moveTo(x + r, y);
+      context.lineTo(x + width - r, y);
+      context.quadraticCurveTo(x + width, y, x + width, y + r);
+      context.lineTo(x + width, y + height - r);
+      context.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+      context.lineTo(x + r, y + height);
+      context.quadraticCurveTo(x, y + height, x, y + height - r);
+      context.lineTo(x, y + r);
+      context.quadraticCurveTo(x, y, x + r, y);
+      context.closePath();
+    }
+
+    function drawCard(context, x, y, width, height, fill, stroke = "#d8d6ca") {
+      roundedRect(context, x, y, width, height, 10);
+      context.fillStyle = fill;
+      context.fill();
+      context.strokeStyle = stroke;
+      context.lineWidth = 1;
+      context.stroke();
+    }
+
+    function drawWrappedText(context, text, x, y, maxWidth, lineHeight, maxLines = 3) {
+      const chars = [...text];
+      const lines = [];
+      let line = "";
+      chars.forEach(char => {
+        const testLine = line + char;
+        if (context.measureText(testLine).width > maxWidth && line) {
+          lines.push(line);
+          line = char;
+        } else {
+          line = testLine;
+        }
+      });
+      if (line) lines.push(line);
+      const visibleLines = lines.slice(0, maxLines);
+      if (lines.length > maxLines) {
+        let last = visibleLines[visibleLines.length - 1];
+        while (context.measureText(`${last}...`).width > maxWidth && last.length > 1) {
+          last = last.slice(0, -1);
+        }
+        visibleLines[visibleLines.length - 1] = `${last}...`;
+      }
+      visibleLines.forEach((item, index) => context.fillText(item, x, y + index * lineHeight));
+      return y + visibleLines.length * lineHeight;
+    }
+
+    function drawMetric(context, x, y, width, height, label, value, caption, dark = false) {
+      drawCard(context, x, y, width, height, dark ? "#173a32" : "#fffdf7", dark ? "#173a32" : "#d8d6ca");
+      context.fillStyle = dark ? "rgba(255, 250, 240, 0.72)" : "#70766d";
+      context.font = "800 24px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+      context.fillText(label, x + 22, y + 22);
+      context.fillStyle = dark ? "#fffaf0" : "#1f2621";
+      context.font = "950 58px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+      context.fillText(value, x + 22, y + 62);
+      context.fillStyle = dark ? "rgba(255, 250, 240, 0.68)" : "#70766d";
+      context.font = "500 22px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+      drawWrappedText(context, caption, x + 22, y + 126, width - 44, 28, 2);
+    }
+
+    function drawScenario(context, x, y, width, title, detail, value, share) {
+      drawCard(context, x, y, width, 112, "#fffdf7");
+      context.fillStyle = "#1f2621";
+      context.font = "950 25px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+      context.fillText(title, x + 20, y + 18);
+      context.fillStyle = "#70766d";
+      context.font = "500 18px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+      drawWrappedText(context, detail, x + 20, y + 55, width - 190, 24, 2);
+      context.fillStyle = "#2f6958";
+      context.font = "950 32px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+      context.textAlign = "right";
+      context.fillText(value, x + width - 20, y + 19);
+      context.fillStyle = "#a65f45";
+      context.font = "900 18px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+      context.fillText(share, x + width - 20, y + 64);
+      context.textAlign = "left";
+    }
+
+    async function downloadReportImage() {
+      const previousText = downloadReportButton.textContent;
+      downloadReportButton.disabled = true;
+      downloadReportButton.textContent = "生成中...";
+
+      try {
+        if (document.fonts && document.fonts.ready) {
+          await document.fonts.ready;
+        }
+
+        const result = calculate();
+        const call = judgement(result);
+        const width = 1080;
+        const height = 1540;
+        const scale = 2;
+        const canvas = document.createElement("canvas");
+        canvas.width = width * scale;
+        canvas.height = height * scale;
+        const context = canvas.getContext("2d");
+        context.scale(scale, scale);
+        context.textBaseline = "top";
+
+        context.fillStyle = "#f4f3ec";
+        context.fillRect(0, 0, width, height);
+        drawCard(context, 34, 34, width - 68, height - 68, "#fffdf7");
+
+        context.fillStyle = "#2f6958";
+        context.font = "950 22px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+        context.fillText("BUSINESS POTENTIAL REPORT", 74, 72);
+        context.fillStyle = "#1f2621";
+        context.font = "950 58px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+        context.fillText("大健康业务营收潜力测算结果", 74, 112);
+        context.fillStyle = "#70766d";
+        context.font = "500 24px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+        drawWrappedText(context, "这份报告用于判断：在当前客户底盘上，大健康业务一年大概能做出多大新增体量。", 74, 190, 860, 34, 2);
+
+        drawMetric(context, 74, 268, 390, 184, "本地诊所基准年业绩", money(result.midLocal), `按${yuan.format(result.targetPool)}名高潜客户池测算`, true);
+        drawMetric(context, 482, 268, 250, 184, "当前年营收估算", money(result.currentRevenue), "客户底盘 × 当前年消费");
+        drawMetric(context, 750, 268, 256, 184, "含渠道合作总盘", money(result.channelTotal), `外部合作放大倍率 ×${result.channel}`);
+
+        drawCard(context, 74, 482, 432, 284, "#f8f4ea");
+        context.fillStyle = "#1f2621";
+        context.font = "950 28px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+        context.fillText("测算底盘", 98, 508);
+        const facts = [
+          ["活跃客户底盘", `${yuan.format(result.customerBase)}人`],
+          ["高潜客户池", `${yuan.format(result.targetPool)}人`],
+          ["客户池内渗透率", pct(result.basePen)],
+          ["基准占当前营收", pct(result.midShare)]
+        ];
+        facts.forEach((fact, index) => {
+          const col = index % 2;
+          const row = Math.floor(index / 2);
+          const x = 98 + col * 198;
+          const y = 560 + row * 82;
+          context.fillStyle = "#70766d";
+          context.font = "800 19px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+          context.fillText(fact[0], x, y);
+          context.fillStyle = "#1f2621";
+          context.font = "950 32px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+          context.fillText(fact[1], x, y + 30);
+        });
+
+        drawCard(context, 528, 482, 478, 412, "#fffdf7");
+        context.fillStyle = "#1f2621";
+        context.font = "950 28px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+        context.fillText("三档经营情境", 552, 508);
+        drawScenario(context, 552, 560, 430, "保守情境", `年客单价3万 · 渗透率${pct(result.lowPen)}`, money(result.lowLocal), `占当前营收${pct(result.lowShare)}`);
+        drawScenario(context, 552, 686, 430, "基准情境", `年客单价4万 · 渗透率${pct(result.basePen)}`, money(result.midLocal), `占当前营收${pct(result.midShare)}`);
+        drawScenario(context, 552, 812, 430, "进取情境", `年客单价5万 · 渗透率${pct(result.highPen)}`, money(result.highLocal), `占当前营收${pct(result.highShare)}`);
+
+        drawCard(context, 74, 794, 432, 120, "#f1efe5");
+        context.fillStyle = "#3e463f";
+        context.font = "500 19px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
+        context.fillText(`基准 = 客户底盘 × 高潜池 × 渗透率 × 4万`, 96, 818);
+        context.fillText(`= ${yuan.format(result.customerBase)} × ${pct(result.targetPool / result.customerBase)} × ${pct(result.basePen)} × 4万`, 96, 850);
+        context.fillText(`= ${money(result.midLocal)}；渠道总盘 = ${money(result.channelTotal)}`, 96, 882);
+
+        drawCard(context, 74, 928, 932, 158, "#1f2621", "#1f2621");
+        context.fillStyle = "#fff8ea";
+        context.font = "950 34px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+        context.fillText(call.title, 104, 958);
+        context.fillStyle = "#ddd8c9";
+        context.font = "500 23px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+        drawWrappedText(context, call.text, 104, 1012, 862, 32, 2);
+
+        drawCard(context, 74, 1118, 932, 250, "#f8f4ea");
+        context.fillStyle = "#2f6958";
+        context.font = "950 22px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+        context.fillText("NEXT STEP", 104, 1150);
+        context.fillStyle = "#1f2621";
+        context.font = "950 34px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+        context.fillText("想进一步了解课程搭建、品项设计和落地路径？", 104, 1190);
+        context.fillStyle = "#70766d";
+        context.font = "500 23px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+        drawWrappedText(context, "联系 Dr 袁伟畅的企业微信，获取更进一步的资料，包括大健康业务的课程设计、品项组合、客户筛选和团队落地建议。", 104, 1244, 640, 32, 3);
+
+        context.save();
+        context.setLineDash([10, 8]);
+        roundedRect(context, 796, 1150, 150, 150, 10);
+        context.strokeStyle = "#b9b49f";
+        context.lineWidth = 2;
+        context.stroke();
+        context.restore();
+        context.fillStyle = "#173a32";
+        context.font = "950 22px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+        context.textAlign = "center";
+        context.fillText("企业微信", 871, 1200);
+        context.fillText("二维码预留", 871, 1234);
+        context.fillStyle = "#70766d";
+        context.font = "900 20px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+        context.fillText("Dr 袁伟畅 企业微信", 871, 1322);
+        context.textAlign = "left";
+
+        context.fillStyle = "#70766d";
+        context.font = "500 18px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+        context.fillText("测算为经营判断工具，真实结果取决于客户筛选、医生交付、合规边界、团队销售与复购设计。", 74, 1432);
+
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png", 0.95));
+        if (!blob) {
+          throw new Error("Canvas export returned an empty image.");
+        }
+        const pngUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        const today = new Date().toISOString().slice(0, 10);
+        link.href = pngUrl;
+        link.download = `大健康营收潜力测算报告-${today}.png`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(pngUrl), 1000);
+      } catch (error) {
+        console.error(error);
+        window.alert("图片报告生成失败。可以先用截图保存这一页，我会再继续优化导出方式。");
+      } finally {
+        downloadReportButton.disabled = false;
+        downloadReportButton.textContent = previousText;
+      }
+    }
+
+    nextButton.addEventListener("click", advance);
+    downloadReportButton.addEventListener("click", downloadReportImage);
+    backButton.addEventListener("click", () => {
+      if (step === 0) return;
+      step -= 1;
+      renderStep();
+    });
+
+    document.getElementById("resetButton").addEventListener("click", () => {
+      step = 0;
+      Object.keys(state).forEach(key => delete state[key]);
+      resultView.classList.remove("active");
+      wizardView.classList.add("active");
+      renderStep();
+    });
+
+    renderStep();
+  </script>
+</body>
+</html>

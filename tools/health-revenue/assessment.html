@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>大健康业务自建潜力评估 10题</title>
+  <style>
+    :root {
+      --canvas: #f4f3ec;
+      --paper: #fffdf7;
+      --ink: #1f2621;
+      --muted: #70766d;
+      --line: #d8d6ca;
+      --moss: #2f6958;
+      --moss-deep: #173a32;
+      --brass: #aa7c38;
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(47, 105, 88, 0.12), transparent 280px),
+        var(--canvas);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    main {
+      width: min(880px, 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: 0 22px 55px rgba(30, 36, 31, 0.12);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: clamp(28px, 6vw, 58px);
+      color: #fffaf0;
+      background: var(--moss-deep);
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #b8cfc5;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    h1 {
+      max-width: 720px;
+      margin: 0;
+      font-size: clamp(30px, 6vw, 56px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .body {
+      padding: clamp(22px, 5vw, 42px);
+      display: grid;
+      gap: 18px;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .item {
+      min-height: 86px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #f8f4ea;
+    }
+
+    .item strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    .item span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    a {
+      width: fit-content;
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 16px;
+      border-radius: var(--radius);
+      background: var(--moss);
+      color: #ffffff;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (max-width: 640px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <p class="eyebrow">接口预留 · 10题评估</p>
+      <h1>大健康业务自建潜力评估</h1>
+    </section>
+    <section class="body">
+      <p>这个页面用于承接营收测算后的第二步：判断机构目前更适合完全自建、先做小范围验证，还是需要老师介入做产品、交付和组织设计。</p>
+      <div class="grid" aria-label="后续10题方向">
+        <div class="item"><strong>客户基础</strong><span>老客健康需求、年龄结构、复购关系。</span></div>
+        <div class="item"><strong>产品能力</strong><span>检测、评估、干预、复购是否能闭环。</span></div>
+        <div class="item"><strong>团队承接</strong><span>咨询、成交、交付、医生协作是否成型。</span></div>
+        <div class="item"><strong>老板认知</strong><span>是否理解大健康不是单品项目，而是新业务系统。</span></div>
+      </div>
+      <p>后续这里会设计成单题跳转的 10 题自评表，并输出“可自建 / 需评估 / 需老师介入”的结果。</p>
+      <a href="./index.html">返回营收测算器</a>
+    </section>
+  </main>
+</body>
+</html>
