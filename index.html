@@ -10,169 +10,202 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://dr-yuan.org/" />
   <link rel="canonical" href="https://dr-yuan.org/" />
+  <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="site-nav" aria-label="页面导航">
-    <a class="brand" href="#top" aria-label="返回顶部">Dr Yuan</a>
+
+  <header class="nav" aria-label="页面导航">
+    <a class="nav-name" href="#top">袁伟畅 <span>Dr. Yuan</span></a>
     <nav class="nav-links" aria-label="主要章节">
-      <a href="#work">现在做什么</a>
-      <a href="#tools">工具箱</a>
-      <a href="#why">为什么是我</a>
-      <a href="#talk">可以聊什么</a>
+      <a href="#work">在做的事</a>
+      <a href="#tools">工具</a>
+      <a href="#view">观点</a>
+      <a href="#profile">履历</a>
     </nav>
-    <a class="nav-pill" href="#tools">Tools</a>
   </header>
 
   <main id="top">
-    <section class="hero section-band">
-      <div class="hero-copy">
-        <span class="soft-label">加完微信，可以先看这一页</span>
-        <h1>医生、美业经营者、大健康实践者</h1>
-        <p class="hero-lead">我关注的不是概念，而是大健康项目如何被客户听懂、团队交付、机构持续经营。</p>
-        <div class="hero-actions" aria-label="快速跳转">
-          <a class="btn btn-primary" href="#work">看看我在做什么</a>
-          <a class="btn btn-outline" href="#tools">打开工具箱</a>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-text reveal">
+        <p class="kicker">医生 · 美业经营者 · 大健康实践者</p>
+        <h1>把大健康<br />做成客户听得懂、<br />团队交付得了的生意。</h1>
+        <p class="hero-sub">我是袁伟畅，临床医学出身，经营美业机构十余年。我关注的不是概念，而是大健康项目在真实机构里的落地。</p>
+        <div class="hero-cta">
+          <a class="btn-solid" href="#work">我在做什么</a>
+          <a class="btn-ghost" href="#tools">先用工具算一算</a>
         </div>
       </div>
+      <figure class="hero-photo reveal">
+        <img src="assets/profile-portrait.jpg" alt="袁伟畅医生形象照" />
+        <figcaption>袁伟畅 · MS / MBA / MMH · ABAARM Candidate</figcaption>
+      </figure>
+    </section>
 
-      <div class="hero-visual" aria-label="袁伟畅医生简介">
-        <div class="portrait-card">
-          <img class="portrait" src="assets/profile-portrait.jpg" alt="袁伟畅医生形象照" />
-          <span class="hi-bubble">Hi</span>
-        </div>
-        <div class="credential-card">
-          <strong>袁伟畅 医生</strong>
-          <span>MS, MBA, MMH, ABAARM Candidate</span>
-        </div>
+    <!-- 三重身份 -->
+    <section class="triad reveal" aria-label="身份摘要">
+      <div class="triad-item">
+        <span class="triad-num">医生背景</span>
+        <p>知道医学的边界在哪里</p>
+      </div>
+      <div class="triad-item">
+        <span class="triad-num">机构经营</span>
+        <p>知道客户与团队的真实现场</p>
+      </div>
+      <div class="triad-item">
+        <span class="triad-num">大健康实践</span>
+        <p>把项目放进真实机构里验证</p>
       </div>
     </section>
 
-    <section class="identity-strip" aria-label="身份摘要">
-      <div class="identity-item">
-        <span>医生背景</span>
-        <strong>知道医学边界</strong>
-      </div>
-      <div class="identity-item">
-        <span>机构经营</span>
-        <strong>知道团队现场</strong>
-      </div>
-      <div class="identity-item">
-        <span>大健康实践</span>
-        <strong>把项目放进真实机构验证</strong>
-      </div>
-    </section>
-
-    <section id="work" class="section-band section-white">
-      <div class="section-head">
-        <span class="soft-label">Current work</span>
+    <!-- 在做的事 -->
+    <section id="work" class="section">
+      <div class="section-head reveal">
+        <span class="sec-no">01</span>
         <h2>现在主要做三件事</h2>
         <p>诊所是实践现场，教育是行业服务，视频号是公开表达。三件事放在一起，才知道一个大健康项目是不是真的能被客户理解、被团队交付。</p>
       </div>
-
-      <div class="project-grid">
-        <article class="project-card">
-          <div class="project-mark">01</div>
-          <h3>丽妍青春诊所</h3>
-          <p>本地长寿医学、功能医学和健康管理服务的实践现场。</p>
+      <div class="work-list">
+        <article class="work-row reveal">
+          <span class="work-idx">丽妍青春诊所</span>
+          <div>
+            <h3>实践现场</h3>
+            <p>本地长寿医学、功能医学和健康管理服务的第一线，所有方法先在这里被验证。</p>
+          </div>
         </article>
-        <article class="project-card">
-          <div class="project-mark">02</div>
-          <h3>畅健教育</h3>
-          <p>面向美业与医美机构的大健康转型课程与陪伴式服务。</p>
+        <article class="work-row reveal">
+          <span class="work-idx">畅健教育</span>
+          <div>
+            <h3>行业服务</h3>
+            <p>面向美业与医美机构的大健康转型课程，与陪伴式的落地服务。</p>
+          </div>
         </article>
-        <article class="project-card">
-          <div class="project-mark">03</div>
-          <h3>干美业的 Dr 袁</h3>
-          <p>记录美业、医美、大健康转型的一线观察和同业拆解。</p>
+        <article class="work-row reveal">
+          <span class="work-idx">干美业的 Dr 袁</span>
+          <div>
+            <h3>公开表达</h3>
+            <p>视频号记录美业、医美、大健康转型的一线观察与同业拆解。</p>
+          </div>
         </article>
       </div>
     </section>
 
-    <section id="tools" class="section-band tools-section">
-      <div class="section-head">
-        <span class="soft-label">Tools</span>
-        <h2>先用一个工具，把问题算清楚。</h2>
-        <p>我会把一些适合公开使用的业务诊断、项目测算和课程评估工具放在这里。先从大健康营收潜力测算开始，后续再逐步补上自建能力评估。</p>
+    <!-- 工具 -->
+    <section id="tools" class="section">
+      <div class="section-head reveal">
+        <span class="sec-no">02</span>
+        <h2>先用一个工具，把问题算清楚</h2>
+        <p>适合公开使用的业务诊断与测算工具，会陆续放在这里。</p>
       </div>
-
-      <div class="tool-grid">
-        <article class="tool-card tool-card-primary">
+      <div class="tool-list">
+        <a class="tool-row reveal" href="tools/health-revenue/">
           <div>
-            <span class="tool-label">已上线</span>
+            <span class="tool-tag">已上线</span>
             <h3>大健康营收潜力测算器</h3>
-            <p>用门店数、活跃顾客、年消费、年龄结构和双美基础，估算机构切入大健康业务后的本地诊所营收与渠道放大空间。</p>
+            <p>用门店数、活跃顾客、年消费、年龄结构和双美基础，估算切入大健康后的营收空间。</p>
           </div>
-          <a class="tool-link" href="tools/health-revenue/">开始测算</a>
-        </article>
-
-        <article class="tool-card">
+          <span class="tool-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="tool-row reveal muted" href="tools/health-revenue/assessment.html">
           <div>
-            <span class="tool-label">预留</span>
+            <span class="tool-tag">筹备中</span>
             <h3>大健康业务自建能力评估</h3>
-            <p>进一步判断机构更适合自己搭建、先做试点，还是需要课程和老师介入。</p>
+            <p>判断机构更适合自建、先做试点，还是需要课程与老师介入。</p>
           </div>
-          <a class="tool-link muted" href="tools/health-revenue/assessment.html">查看预留页</a>
+          <span class="tool-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 观点 · 代表内容 -->
+    <section id="view" class="section">
+      <div class="section-head reveal">
+        <span class="sec-no">03</span>
+        <h2>几条有代表性的内容</h2>
+        <p>比起头衔，这些内容更能说明我怎么看这个行业。</p>
+      </div>
+      <div class="piece-list">
+        <article class="piece reveal">
+          <span class="piece-tag">干美业的Dr袁 · 财报观察</span>
+          <h3>报表增长 ≠ 估值上涨</h3>
+          <p>美丽田园收入利润都在涨，市值为什么不涨？给美业老板的一堂资本市场课。</p>
+        </article>
+        <article class="piece reveal">
+          <span class="piece-tag">干美业的Dr袁 · 同业拆解</span>
+          <h3>拆解 100 家长寿医学诊所 · Lanserhof</h3>
+          <p>欧洲最贵的长寿医学诊所，到底在卖什么？哪些做法值得中国机构参考。</p>
+        </article>
+        <article class="piece reveal">
+          <span class="piece-tag">做美容的Dr袁 · 健康管理</span>
+          <h3>健康管理，管到厨房里</h3>
+          <p>去 VIP 顾客家做一次真正的居家健康管理：医院解决诊断和治疗，回家之后每天怎么吃、怎么量，也需要有人帮。</p>
         </article>
       </div>
+      <p class="channel-note reveal">更多内容在视频号：<strong>干美业的Dr袁</strong>（给美业老板）· <strong>做美容的Dr袁</strong>（给求美者与家庭）</p>
     </section>
 
-    <section id="why" class="section-band why-band">
-      <div class="why-copy">
-        <span class="soft-label light">Why this mix</span>
-        <h2>我更关心真实问题。</h2>
-        <p>功能医学、长寿医学和大健康，不应该只停留在概念里。真正难的是客户听不听得懂，顾问敢不敢讲，医生和店长能不能配合，服务能不能持续做下去。</p>
-      </div>
-
-      <div class="why-card">
-        <span class="gold-line"></span>
-        <h3>这就是我把医生背景和机构经营放在一起看的原因。</h3>
-        <p>医学背景让我知道边界；经营现场让我知道客户、团队和交付的真实反应。</p>
-      </div>
-    </section>
-
-    <section id="talk" class="section-band">
-      <div class="section-head">
-        <span class="soft-label">Conversation starters</span>
+    <!-- 可以聊什么 -->
+    <section class="section">
+      <div class="section-head reveal">
+        <span class="sec-no">04</span>
         <h2>可以从这些问题聊起</h2>
         <p>如果你也在关注美业、医美和大健康的连接，这些话题都适合直接聊。</p>
       </div>
+      <ul class="topic-list reveal" aria-label="交流话题">
+        <li>美业 / 医美机构如何做大健康</li>
+        <li>长寿医学诊所如何选项目</li>
+        <li>美容院老客如何转入健康管理</li>
+        <li>医生、顾问、店长如何协同成交</li>
+        <li>大健康项目如何被客户听懂</li>
+        <li>功能医学 / BHRT / 抗衰项目本地化</li>
+      </ul>
+    </section>
 
-      <div class="talk-grid" aria-label="交流话题">
-        <span>美业 / 医美机构如何做大健康</span>
-        <span>长寿医学诊所如何选项目</span>
-        <span>美容院老客如何转入健康管理</span>
-        <span>医生、顾问、店长如何协同成交</span>
-        <span>大健康项目如何被客户听懂</span>
-        <span>功能医学 / BHRT / 抗衰项目本地化</span>
+    <!-- 履历 -->
+    <section id="profile" class="section profile">
+      <div class="section-head reveal">
+        <span class="sec-no">05</span>
+        <h2>袁伟畅</h2>
+        <p class="profile-degrees">临床医学硕士 · 医疗美容主诊主治医师<br />北京大学光华管理学院 MBA · 康奈尔大学酒店管理学院 MMH<br />A4M 抗衰老与再生医学认证候选人</p>
+      </div>
+      <ul class="cred-list reveal" aria-label="公开身份">
+        <li>合肥丽妍春天美容集团总经理</li>
+        <li>合肥丽妍医疗美容院长</li>
+        <li>丽妍青春诊所创始人</li>
+        <li>畅健教育创始人</li>
+        <li>安徽好波国际内衣有限公司总经理</li>
+        <li>Ori SPA 主理人</li>
+      </ul>
+    </section>
+
+    <!-- 结语 -->
+    <section class="closing" aria-label="结语">
+      <p class="closing-mark" aria-hidden="true">“</p>
+      <blockquote>医学背景让我知道边界，<br />经营现场让我知道客户、团队和交付的真实反应。</blockquote>
+      <p class="closing-sign">—— 袁伟畅</p>
+      <div class="closing-channels">
+        <span>视频号搜索：干美业的Dr袁</span>
+        <span>公众号：干美业的 dr 袁</span>
       </div>
     </section>
 
-    <section class="section-band section-white profile-section">
-      <div class="profile-card">
-        <div>
-          <span class="soft-label">Profile</span>
-          <h2>袁伟畅 医生</h2>
-          <p>临床医学硕士，医疗美容主诊主治医师，北京大学光华管理学院 MBA，康奈尔大学酒店管理学院 MMH，A4M 抗衰老与再生医学认证候选人。</p>
-        </div>
-        <div class="profile-list" aria-label="公开身份">
-          <span>合肥丽妍春天美容集团总经理</span>
-          <span>合肥丽妍医疗美容院长</span>
-          <span>丽妍青春诊所创始人</span>
-          <span>畅健教育创始人</span>
-          <span>安徽好波国际内衣有限公司总经理</span>
-          <span>Ori SPA 主理人</span>
-        </div>
-      </div>
-    </section>
   </main>
 
-  <footer class="site-footer">
+  <footer class="footer">
     <div>
-      <strong>Dr Yuan</strong>
+      <strong>袁伟畅 Dr. Yuan</strong>
       <span>医生 × 美业经营者 × 大健康实践者</span>
     </div>
-    <a href="#top">回到顶部</a>
+    <a href="#top">回到顶部 ↑</a>
   </footer>
+
+  <script>
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
 </body>
 </html>
