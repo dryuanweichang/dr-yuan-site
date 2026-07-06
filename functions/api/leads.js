@@ -133,6 +133,34 @@ async function sendNotification(env, payload, id) {
   return { configured: true, sent: true, error: "" };
 }
 
+async function sendWecomNotification(env, payload, id) {
+  if (!env.WECOM_WEBHOOK_URL) return { configured: false, sent: false };
+
+  const result = payload.result || {};
+  const answers = Object.entries(payload.answers || {})
+    .map(([key, value]) => `>${ANSWER_LABELS[key] || key}：${value || "-"}`)
+    .join("\n");
+
+  const content = [
+    `**新线索** ${result.tool === "fit-assessment" ? "（机构自测）" : "（营收测算）"}`,
+    `>判定：<font color="warning">${result.judgement || "-"}</font>`,
+    `>手机：${payload.phone}`,
+    answers,
+    `[打开后台](https://dr-yuan.org/admin/) 编号 ${id || "-"}`
+  ].join("\n").slice(0, 4000);
+
+  const response = await fetch(env.WECOM_WEBHOOK_URL, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ msgtype: "markdown", markdown: { content } })
+  });
+
+  if (!response.ok) {
+    throw new Error(`WeCom webhook HTTP ${response.status}`);
+  }
+  return { configured: true, sent: true };
+}
+
 export async function onRequestPost({ request, env }) {
   if (!env.LEADS_DB) {
     return jsonResponse({ ok: false, message: "后台数据库还没有绑定。" }, 503);
@@ -197,6 +225,12 @@ export async function onRequestPost({ request, env }) {
   } catch (error) {
     emailStatus = { configured: true, sent: false, error: error.message || "Email send failed" };
     console.error("Lead notification email failed", error);
+  }
+
+  try {
+    await sendWecomNotification(env, payload, id);
+  } catch (error) {
+    console.error("Lead WeCom notification failed", error);
   }
 
   if (id && emailStatus.configured) {

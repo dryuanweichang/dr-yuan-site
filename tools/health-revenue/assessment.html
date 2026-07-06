@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>大健康业务自建潜力评估 10题</title>
+  <title>你的机构适不适合做长寿医学？10题自测</title>
+  <meta name="description" content="3分钟自测：你的机构现在适合马上做长寿医学、轻量试点，还是先别重投入。来自袁伟畅医生的机构转型判断框架。">
   <style>
     :root {
       --canvas: #f4f3ec;
@@ -14,29 +15,26 @@
       --moss: #2f6958;
       --moss-deep: #173a32;
       --brass: #aa7c38;
+      --red: #a2503c;
       --radius: 8px;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       min-height: 100vh;
       margin: 0;
+      padding: 24px 16px 48px;
       display: grid;
-      place-items: center;
-      padding: 24px;
+      place-items: start center;
       color: var(--ink);
       background:
         linear-gradient(180deg, rgba(47, 105, 88, 0.12), transparent 280px),
         var(--canvas);
       font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
-      line-height: 1.5;
+      line-height: 1.65;
     }
-
     main {
-      width: min(880px, 100%);
+      width: min(680px, 100%);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--paper);
@@ -44,103 +42,647 @@
       overflow: hidden;
     }
 
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ---- 首屏 ---- */
     .hero {
-      padding: clamp(28px, 6vw, 58px);
+      padding: clamp(28px, 6vw, 52px);
       color: #fffaf0;
       background: var(--moss-deep);
     }
-
-    .eyebrow {
-      margin: 0 0 12px;
-      color: #b8cfc5;
-      font-size: 12px;
-      font-weight: 900;
-    }
-
-    h1 {
-      max-width: 720px;
-      margin: 0;
-      font-size: clamp(30px, 6vw, 56px);
-      line-height: 1.05;
-      letter-spacing: 0;
-    }
-
-    .body {
-      padding: clamp(22px, 5vw, 42px);
-      display: grid;
-      gap: 18px;
-    }
-
-    p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .item {
-      min-height: 86px;
-      padding: 14px;
+    .eyebrow { margin: 0 0 12px; color: #b8cfc5; font-size: 12px; font-weight: 700; letter-spacing: .18em; }
+    .hero h1 { margin: 0; font-size: clamp(24px, 5.4vw, 34px); line-height: 1.4; }
+    .hero .sub { margin: 14px 0 0; color: rgba(255, 250, 240, .82); font-size: 15px; }
+    .hero-body { padding: clamp(24px, 5vw, 40px); }
+    .hero-body p { margin: 0 0 14px; color: var(--muted); font-size: 14.5px; }
+    .worry-list { margin: 0 0 22px; padding: 0; list-style: none; }
+    .worry-list li {
+      padding: 12px 14px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: #f8f4ea;
+      margin-bottom: 8px;
+      font-size: 14.5px;
     }
+    .worry-list li span { color: var(--brass); font-weight: 700; margin-right: 8px; }
+    .note { font-size: 12.5px; color: var(--muted); }
 
-    .item strong {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--ink);
-      font-size: 15px;
-    }
-
-    .item span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    a {
-      width: fit-content;
-      min-height: 42px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 16px;
+    /* ---- 按钮 ---- */
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 15px 20px;
+      border: 0;
       border-radius: var(--radius);
       background: var(--moss);
-      color: #ffffff;
-      font-weight: 900;
-      text-decoration: none;
+      color: #fffaf0;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active { background: var(--moss-deep); }
+    .btn[disabled] { opacity: .45; cursor: not-allowed; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      font-weight: 400;
+      font-size: 14px;
+      padding: 11px 20px;
     }
 
-    @media (max-width: 640px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+    /* ---- 答题屏 ---- */
+    .quiz { padding: clamp(24px, 5vw, 40px); }
+    .progress-track { height: 4px; border-radius: 2px; background: var(--line); margin-bottom: 26px; overflow: hidden; }
+    .progress-fill { height: 100%; width: 0; background: var(--brass); transition: width .3s ease; }
+    .q-no { font-size: 12px; letter-spacing: .2em; color: var(--brass); font-weight: 700; }
+    .q-text { margin: 10px 0 4px; font-size: clamp(18px, 4.6vw, 22px); font-weight: 700; line-height: 1.5; }
+    .q-hint { margin: 0 0 18px; font-size: 13px; color: var(--muted); }
+    .options { display: grid; gap: 10px; margin-top: 18px; }
+    .option {
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      font-size: 15px;
+      text-align: left;
+      cursor: pointer;
+      line-height: 1.55;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color .15s, background .15s;
     }
+    .option:active, .option.selected { border-color: var(--moss); background: rgba(47, 105, 88, .08); }
+    .quiz-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; gap: 12px; }
+    .back-link { background: none; border: 0; color: var(--muted); font-size: 13.5px; cursor: pointer; padding: 6px 0; }
+    .multi-tip { font-size: 12.5px; color: var(--muted); }
+
+    /* ---- 留资屏 ---- */
+    .lead { padding: clamp(24px, 5vw, 40px); }
+    .lead h2 { margin: 0 0 8px; font-size: 22px; }
+    .lead p { margin: 0 0 20px; color: var(--muted); font-size: 14px; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 13.5px; color: var(--muted); margin-bottom: 6px; }
+    .field input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-size: 16px;
+      background: #fff;
+      color: var(--ink);
+    }
+    .field input:focus { outline: 2px solid var(--moss); outline-offset: 1px; border-color: var(--moss); }
+    .form-error { color: var(--red); font-size: 13.5px; min-height: 20px; margin: 4px 0 8px; }
+    .privacy { font-size: 12px; color: var(--muted); margin-top: 12px; }
+
+    /* ---- 结果屏 ---- */
+    .result { padding: clamp(24px, 5vw, 40px); }
+    .verdict {
+      display: inline-block;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .verdict.go { background: rgba(47, 105, 88, .12); color: var(--moss-deep); }
+    .verdict.hold { background: rgba(170, 124, 56, .14); color: #7c5a28; }
+    .verdict.stop { background: rgba(162, 80, 60, .12); color: var(--red); }
+    .result h2 { margin: 0 0 6px; font-size: clamp(20px, 5vw, 26px); line-height: 1.45; }
+    .score-line { font-size: 13.5px; color: var(--muted); margin: 0 0 18px; }
+    .result-body p { margin: 0 0 12px; font-size: 15px; }
+    .next-steps { margin: 6px 0 0; padding: 0 0 0 2px; list-style: none; }
+    .next-steps li { padding: 8px 0 8px 22px; position: relative; font-size: 14.5px; }
+    .next-steps li::before { content: ""; position: absolute; left: 4px; top: 17px; width: 7px; height: 7px; border-radius: 50%; background: var(--brass); }
+    .cta-card {
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 18px 20px;
+      background: #fff;
+    }
+    .cta-card h3 { margin: 0 0 6px; font-size: 16.5px; }
+    .cta-card p { margin: 0; font-size: 14px; color: var(--muted); }
+    .wx-box {
+      margin-top: 22px;
+      border-radius: var(--radius);
+      background: var(--moss-deep);
+      color: #fffaf0;
+      padding: 22px 18px;
+      text-align: center;
+    }
+    .wx-box img { width: 150px; height: 150px; border-radius: 6px; margin: 0 auto 12px; display: none; }
+    .wx-box img.loaded { display: block; }
+    .wx-box p { margin: 0 0 6px; font-size: 14.5px; }
+    .wx-box .small { font-size: 12.5px; color: rgba(255, 250, 240, .7); }
+    .channel-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 12px; }
+    .channel-tags span {
+      padding: 8px 14px;
+      border: 1px solid rgba(216, 185, 126, .55);
+      border-radius: 4px;
+      color: #d8b97e;
+      font-size: 13px;
+    }
+    .restart { margin-top: 20px; text-align: center; }
+    .submit-note { font-size: 12.5px; color: var(--muted); text-align: center; margin-top: 10px; }
+
+    .foot {
+      padding: 18px clamp(24px, 5vw, 40px) 26px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .foot a { color: var(--moss); text-decoration: none; }
   </style>
 </head>
 <body>
   <main>
-    <section class="hero">
-      <p class="eyebrow">接口预留 · 10题评估</p>
-      <h1>大健康业务自建潜力评估</h1>
-    </section>
-    <section class="body">
-      <p>这个页面用于承接营收测算后的第二步：判断机构目前更适合完全自建、先做小范围验证，还是需要老师介入做产品、交付和组织设计。</p>
-      <div class="grid" aria-label="后续10题方向">
-        <div class="item"><strong>客户基础</strong><span>老客健康需求、年龄结构、复购关系。</span></div>
-        <div class="item"><strong>产品能力</strong><span>检测、评估、干预、复购是否能闭环。</span></div>
-        <div class="item"><strong>团队承接</strong><span>咨询、成交、交付、医生协作是否成型。</span></div>
-        <div class="item"><strong>老板认知</strong><span>是否理解大健康不是单品项目，而是新业务系统。</span></div>
+    <!-- 首屏 -->
+    <section class="screen active" id="s-landing">
+      <div class="hero">
+        <p class="eyebrow">10 题 · 约 3 分钟</p>
+        <h1>你的机构<br>适不适合做长寿医学？</h1>
+        <p class="sub">袁伟畅医生 · 自营长寿医学诊所跑通后总结的机构自测</p>
       </div>
-      <p>后续这里会设计成单题跳转的 10 题自评表，并输出“可自建 / 需评估 / 需老师介入”的结果。</p>
-      <a href="./index.html">返回营收测算器</a>
+      <div class="hero-body">
+        <p>长寿医学、大健康、抗衰管理正在变热，很多美业和医美老板都在问：</p>
+        <ul class="worry-list">
+          <li><span>01</span>我到底适不适合做？</li>
+          <li><span>02</span>是自己建诊所，还是先做轻量项目？</li>
+          <li><span>03</span>是现在入局，还是先学习观察？</li>
+        </ul>
+        <button class="btn" onclick="startQuiz()">开始自测</button>
+        <p class="note" style="margin-top:14px;">这份自测不替你做决定，也不鼓励冲动投入。它帮你看清：你现在有没有客户、团队、资源和转化路径，适合从哪一步开始。请按机构真实情况选择。</p>
+      </div>
     </section>
+
+    <!-- 答题屏 -->
+    <section class="screen" id="s-quiz">
+      <div class="quiz">
+        <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+        <span class="q-no" id="q-no"></span>
+        <h2 class="q-text" id="q-text"></h2>
+        <p class="q-hint" id="q-hint"></p>
+        <div class="options" id="options"></div>
+        <div class="quiz-foot">
+          <button class="back-link" id="back-btn" onclick="goBack()">← 上一题</button>
+          <span class="multi-tip" id="multi-tip"></span>
+          <button class="btn" id="multi-next" style="display:none;width:auto;padding:12px 26px;" onclick="confirmMulti()">继续</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 留资屏 -->
+    <section class="screen" id="s-lead">
+      <div class="lead">
+        <h2>你的自测结果已经生成</h2>
+        <p>这个结果不是判断你"能不能做"，而是帮你看清现在适合从哪一步开始。留下联系方式，结果和对应的下一步建议就发给你。</p>
+        <div class="field">
+          <label for="lead-name">你的称呼 *</label>
+          <input id="lead-name" type="text" maxlength="30" placeholder="例：张总 / 王女士">
+        </div>
+        <div class="field">
+          <label for="lead-phone">手机号 *</label>
+          <input id="lead-phone" type="tel" maxlength="11" inputmode="numeric" placeholder="11 位手机号">
+        </div>
+        <div class="field">
+          <label for="lead-city">所在城市（选填）</label>
+          <input id="lead-city" type="text" maxlength="30" placeholder="例：合肥">
+        </div>
+        <div class="field">
+          <label for="lead-company">机构 / 品牌名（选填）</label>
+          <input id="lead-company" type="text" maxlength="60" placeholder="例：××美容">
+        </div>
+        <p class="form-error" id="lead-error"></p>
+        <button class="btn" id="lead-submit" onclick="submitLead()">提交，查看我的结果</button>
+        <p class="privacy">信息仅用于发送自测结果和后续建议，不对外公开。</p>
+      </div>
+    </section>
+
+    <!-- 结果屏 -->
+    <section class="screen" id="s-result">
+      <div class="result">
+        <span class="verdict" id="verdict"></span>
+        <h2 id="result-title"></h2>
+        <p class="score-line" id="score-line"></p>
+        <div class="result-body" id="result-body"></div>
+        <div class="cta-card" id="cta-card"></div>
+        <div class="wx-box">
+          <img id="wx-qr" src="../../assets/dr-yuan-wechat-qr.jpg" alt="袁医生微信二维码" onload="this.classList.add('loaded')" onerror="this.remove()">
+          <p>加袁医生微信聊聊你的具体情况</p>
+          <p class="small">添加时备注「城市 + 业态 + 称呼」（例：合肥·双美·张总）</p>
+          <div class="channel-tags">
+            <span>视频号搜索：干美业的Dr袁</span>
+            <span>公众号：干美业的 dr 袁</span>
+          </div>
+        </div>
+        <p class="submit-note" id="submit-note"></p>
+        <div class="restart">
+          <button class="btn-ghost btn" style="width:auto;" onclick="restart()">重新测一次</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="foot">
+      <a href="./">← 营收潜力测算器</a>
+      <a href="/">dr-yuan.org</a>
+    </div>
   </main>
+
+  <script>
+    /* ============ 题库：源自《你适不适合做大健康？10题线上自评表 V2》+ 三条红灯 ============ */
+    const QUESTIONS = [
+      {
+        key: "机构类型",
+        text: "你的机构或业务类型更接近哪一种？",
+        options: [
+          { v: "A", text: "生美 / 美容院 / 皮肤管理" },
+          { v: "B", text: "医美机构 / 双美机构" },
+          { v: "C", text: "已有中医 / 西医 / 综合诊所或健康管理中心" },
+          { v: "D", text: "医美上游品牌 / 代理商 / 供应链公司" },
+          { v: "E", text: "个人从业者 / 投资人 / 其他" }
+        ]
+      },
+      {
+        key: "客户基础",
+        text: "你现在的客户基础更接近哪种情况？",
+        options: [
+          { v: "A", text: "客户不稳定，主要靠活动、团购或低客单项目", red: "R1" },
+          { v: "B", text: "有一批老客，但还没有清晰分层", score: 1 },
+          { v: "C", text: "有35岁以上、消费能力较强、信任度不错的老客", score: 2 },
+          { v: "D", text: "已经有一批高净值客户，愿意为健康、抗衰或家庭健康付费", score: 3 }
+        ]
+      },
+      {
+        key: "主业经营状态",
+        text: "你的主业现在的经营状态是？",
+        options: [
+          { v: "A", text: "盈利稳定" },
+          { v: "B", text: "基本持平" },
+          { v: "C", text: "亏损中，想靠大健康这条新业务翻身", red: "R2" }
+        ]
+      },
+      {
+        key: "老板参与方式",
+        text: "做大健康这件事，你本人的参与方式是？",
+        options: [
+          { v: "A", text: "我亲自带队，自己学、自己干" },
+          { v: "B", text: "我参与关键决策，执行交给核心团队" },
+          { v: "C", text: "基本交给团队去做，我只看结果", red: "R3" }
+        ]
+      },
+      {
+        key: "关注原因",
+        text: "你现在为什么关注大健康 / 长寿医学方向？",
+        options: [
+          { v: "A", text: "主要是听说行业很热，想先了解趋势", score: 0 },
+          { v: "B", text: "现有业务增长变慢，想找新的项目机会", score: 1 },
+          { v: "C", text: "客户已经开始问睡眠、疲劳、体重、抗衰、慢病等问题", score: 2 },
+          { v: "D", text: "已经决定把大健康作为未来一条重要业务线", score: 3 }
+        ]
+      },
+      {
+        key: "客户健康需求",
+        text: "你的客户现在对健康类需求的表现是？",
+        options: [
+          { v: "A", text: "基本还是只关心变美，对健康兴趣不明显", score: 0 },
+          { v: "B", text: "偶尔会问睡眠、精力、体重、免疫、围绝经等问题", score: 1 },
+          { v: "C", text: "已经有人主动问体检、抗衰、营养、激素、细胞等项目", score: 2 },
+          { v: "D", text: "已经有客户在做健康管理、海外医疗、功能医学或长期抗衰项目", score: 3 }
+        ]
+      },
+      {
+        key: "业务理解",
+        text: "你对大健康业务的理解更接近哪一种？",
+        options: [
+          { v: "A", text: "还不太清楚，只觉得可能是一个风口", score: 0 },
+          { v: "B", text: "觉得可以加几个项目，但还没想清楚业务模式", score: 1 },
+          { v: "C", text: "理解它不是单个项目，而是客户教育、检测、医生、交付和复购的系统", score: 2 },
+          { v: "D", text: "已经把它当作机构未来升级方向，愿意持续学习和投入", score: 3 }
+        ]
+      },
+      {
+        key: "团队承接",
+        text: "你的团队现在能不能承接健康类项目？",
+        options: [
+          { v: "A", text: "还没有让团队参与，主要是老板自己在想", score: 0 },
+          { v: "B", text: "团队知道一点，但不理解、不敢讲、不知道怎么卖", score: 1 },
+          { v: "C", text: "团队愿意配合，但缺话术、SOP、激励和跟进流程", score: 2 },
+          { v: "D", text: "已经能推动评估、体验、检测、到诊、转疗程或复购", score: 3 }
+        ]
+      },
+      {
+        key: "医生合规资源",
+        text: "你现在有没有医生、合规或交付资源？",
+        options: [
+          { v: "A", text: "暂时没有稳定医生，也不清楚合规边界", score: 0 },
+          { v: "B", text: "有熟人医生或供应商，但合作不稳定", score: 1 },
+          { v: "C", text: "有合作医生、检测或项目供应商，可以小范围承接", score: 2 },
+          { v: "D", text: "已有诊所、医务团队、护士 / 健管师或比较成熟的交付流程", score: 3 }
+        ]
+      },
+      {
+        key: "切入点",
+        text: "如果现在开始，你更适合从哪一步切入？",
+        options: [
+          { v: "A", text: "先学习行业和模式，还不适合马上做项目", score: 0 },
+          { v: "B", text: "先做健康沙龙、客户筛选、自评表或基础评估", score: 1 },
+          { v: "C", text: "先做检测、体检、营养、睡眠、体重、肠道等轻量项目", score: 2 },
+          { v: "D", text: "直接规划诊所、医生团队、高值抗衰或年度健康管理方案", score: 3 }
+        ]
+      },
+      {
+        key: "投入节奏",
+        text: "你能接受的投入节奏更接近哪一种？",
+        options: [
+          { v: "A", text: "暂时不想投入，只想看看趋势", score: 0 },
+          { v: "B", text: "可以小成本试水，但不能影响主业", score: 1 },
+          { v: "C", text: "愿意用 3-6 个月跑一个小闭环", score: 2 },
+          { v: "D", text: "愿意用 6-12 个月系统搭建客户、团队、医生和产品路径", score: 3 }
+        ]
+      },
+      {
+        key: "最担心的问题",
+        text: "你现在最担心的问题是什么？",
+        hint: "多选，最多选 3 项",
+        multi: true, max: 3,
+        options: [
+          { v: "A", text: "不知道这个行业到底是不是真的机会" },
+          { v: "B", text: "不知道自己的机构适不适合做" },
+          { v: "C", text: "不知道从什么项目开始" },
+          { v: "D", text: "没有医生或交付资源" },
+          { v: "E", text: "合规边界不清楚，不知道哪些能讲、哪些不能讲" },
+          { v: "F", text: "员工不会介绍、不敢卖" },
+          { v: "G", text: "客户听不懂、不愿意买单" },
+          { v: "H", text: "体验后不知道怎么转疗程 / 复购" },
+          { v: "I", text: "担心投入太大、回本太慢" },
+          { v: "J", text: "已经做了一点，但没有系统方法" }
+        ]
+      }
+    ];
+
+    /* ============ 红灯结论 ============ */
+    const RED_RESULTS = {
+      R1: {
+        title: "先别急着做长寿医学，先把客户基数做起来",
+        body: [
+          "长寿医学这门生意，盘的是存量客户的信任，不是帮你拉新客的工具。客户不稳定、靠活动和低客单撑着的时候切进来，项目上了也没人可转。",
+          "更适合你的路径：先把主业的老客留存和会员体系做扎实，积累一批 35 岁以上、信任你的客户，再回来做这件事。"
+        ],
+        cta: { title: "先跟着内容建认知", desc: "关注视频号「干美业的Dr袁」和公众号，看机构转型的一线拆解，等客户基数够了再启动。" }
+      },
+      R2: {
+        title: "主业还在亏损时，别把大健康当救命稻草",
+        body: [
+          "大健康不是止血带——它前期需要投入品项、检测、团队培训，回报周期以季度计。主业亏损时硬上，大概率两头失血。",
+          "更适合你的路径：先把主业现金流稳住。这期间可以先学认知、先盘客户，把启动条件准备好。"
+        ],
+        cta: { title: "先止血，再转型", desc: "如果想先建认知，可以来长寿医学行业大课（每季度一期·合肥）听一次，回去先不动重投入。" }
+      },
+      R3: {
+        title: "老板不下场，这件事落不了地",
+        body: [
+          "长寿医学是整个机构的转型，不是加一个项目：品项要老板拍板，医生要老板对接，客户的信任要老板背书。只派员工来学，回去推不动。",
+          "更适合你的路径：等你能亲自带队的时候再启动。可以先自己来听一次课，判断值不值得投入你的时间。"
+        ],
+        cta: { title: "先自己来听一次", desc: "长寿医学行业大课（每季度一期·合肥），建议老板本人先来，想清楚再带团队。" }
+      }
+    };
+
+    /* ============ 分数档结论（0-24 分）============ */
+    const TIERS = [
+      {
+        min: 0, max: 6, label: "行业观察型", cls: "hold",
+        title: "先别急着做项目，适合先看懂行业",
+        body: [
+          "你现在可能还处在「听说大健康很热」的阶段。不建议马上重投入、开诊所或上复杂项目，更适合先理解行业趋势、客户变化和合规边界。",
+          "先不要被项目和供应商带着走。"
+        ],
+        steps: ["先听公开课或直播，看大健康入门内容", "了解美业 / 医美机构为什么开始关注长寿医学"],
+        cta: { title: "跟着内容入门", desc: "视频号「干美业的Dr袁」+ 公众号「干美业的 dr 袁」，机构转型的一线观察都在这里。" }
+      },
+      {
+        min: 7, max: 12, label: "兴趣培育型", cls: "hold",
+        title: "可以先做客户教育和轻量筛选",
+        body: [
+          "你已经看到机会，但基础还不够完整。现在更适合从低风险动作开始，而不是直接上大项目。",
+          "先筛选一批高价值老客，用内容和沙龙教育客户，观察他们对睡眠、体重、抗衰、围绝经、慢病管理的真实兴趣。"
+        ],
+        steps: ["筛出机构里 35 岁以上、信任度高的老客", "做 1-2 场健康沙龙试水，不急着成交"],
+        cta: { title: "长寿医学行业大课", desc: "3 天讲清楚「怎么做」：品项、团队、合规、90 天路径。每季度一期 · 合肥，¥6,800 起。" }
+      },
+      {
+        min: 13, max: 18, label: "试点机会型", cls: "go",
+        title: "适合小范围试点，先跑通一个小的经营环",
+        body: [
+          "你已经有客户基础，也有一定认知或资源。现在不要贪大：先设计一个低门槛入口，选 1-2 个轻量项目打样，用 30-90 天验证客户是否愿意持续付费。",
+          "这个阶段最容易犯的错是品项贪多、团队没跟上。"
+        ],
+        steps: ["选定试点项目和第一批目标客户", "建员工话术和跟进表，找到稳定的医生 / 检测资源"],
+        cta: { title: "大课 或 1对1咨询", desc: "想系统学：行业大课（每季度一期·合肥）。想直接对路径：袁医生 1对1咨询，¥3,000/次·约1小时，费用可全额抵扣大课或共建。" }
+      },
+      {
+        min: 19, max: 24, label: "系统规划型", cls: "go",
+        title: "适合系统规划，但仍要先设计路径",
+        body: [
+          "你已经具备比较好的客户、团队、资源和投入意愿。你的问题不是「能不能做」，而是怎么做得稳、做得合规、做得能复购。",
+          "接下来要定的是：自营、轻自营还是合作路径；客户分层和产品货架；医生、顾问、门店的分工；体验、转疗程、复购的路径。"
+        ],
+        steps: ["用一次 1对1 把切入路径和 90 天动作定下来", "如果确定重投入，了解诊所共建（袁医生带队下店，一年只接 2 家）"],
+        cta: { title: "1对1咨询 / 诊所共建", desc: "1对1咨询 ¥3,000/次·约1小时，含会前调研表和书面要点，费用可全额抵扣大课或共建服务费。共建一年只接 2 家。" }
+      }
+    ];
+
+    /* ============ 状态与流程 ============ */
+    let idx = 0;
+    let answers = [];          // {key, v, text, score, red}
+    let multiPicked = [];
+    let finalResult = null;    // {kind:'red'|'tier', ...}
+
+    const $ = (id) => document.getElementById(id);
+    function show(id) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      $(id).classList.add("active");
+      window.scrollTo(0, 0);
+    }
+
+    function startQuiz() {
+      idx = 0; answers = []; finalResult = null;
+      show("s-quiz");
+      render();
+    }
+
+    function render() {
+      const q = QUESTIONS[idx];
+      $("q-no").textContent = "第 " + (idx + 1) + " 题 / 共 " + QUESTIONS.length + " 题";
+      $("q-text").textContent = q.text;
+      $("q-hint").textContent = q.hint || "";
+      $("q-hint").style.display = q.hint ? "block" : "none";
+      $("back-btn").style.visibility = idx === 0 ? "hidden" : "visible";
+      $("progress").style.width = Math.round(idx / QUESTIONS.length * 100) + "%";
+
+      const box = $("options");
+      box.innerHTML = "";
+      multiPicked = [];
+      $("multi-next").style.display = q.multi ? "inline-block" : "none";
+      $("multi-tip").textContent = "";
+
+      q.options.forEach(opt => {
+        const b = document.createElement("button");
+        b.className = "option";
+        b.textContent = opt.v + ". " + opt.text;
+        b.onclick = () => q.multi ? toggleMulti(b, opt, q) : pick(opt, q);
+        box.appendChild(b);
+      });
+    }
+
+    let locked = false;
+    function pick(opt, q) {
+      if (locked) return;
+      locked = true;
+      answers = answers.filter(a => a.key !== q.key);
+      answers.push({ key: q.key, v: opt.v, text: opt.text, score: opt.score || 0, red: opt.red || null });
+      setTimeout(() => {
+        locked = false;
+        if (opt.red) { finish({ kind: "red", code: opt.red }); return; }
+        next();
+      }, 160);
+    }
+
+    function toggleMulti(btn, opt, q) {
+      const at = multiPicked.findIndex(p => p.v === opt.v);
+      if (at >= 0) { multiPicked.splice(at, 1); btn.classList.remove("selected"); }
+      else {
+        if (multiPicked.length >= q.max) { $("multi-tip").textContent = "最多选 " + q.max + " 项"; return; }
+        multiPicked.push(opt); btn.classList.add("selected");
+      }
+      $("multi-tip").textContent = multiPicked.length ? ("已选 " + multiPicked.length + " / " + q.max) : "";
+    }
+
+    function confirmMulti() {
+      const q = QUESTIONS[idx];
+      if (!multiPicked.length) { $("multi-tip").textContent = "请至少选 1 项"; return; }
+      answers = answers.filter(a => a.key !== q.key);
+      answers.push({ key: q.key, v: multiPicked.map(p => p.v).join(""), text: multiPicked.map(p => p.text).join("；"), score: 0, red: null });
+      next();
+    }
+
+    function next() {
+      if (idx < QUESTIONS.length - 1) { idx += 1; render(); }
+      else {
+        const score = answers.reduce((s, a) => s + (a.score || 0), 0);
+        finish({ kind: "tier", score });
+      }
+    }
+
+    function goBack() {
+      if (idx === 0) return;
+      const prevKey = QUESTIONS[idx - 1].key;
+      answers = answers.filter(a => a.key !== prevKey);
+      idx -= 1;
+      render();
+    }
+
+    function finish(result) {
+      finalResult = result;
+      $("progress").style.width = "100%";
+      show("s-lead");
+    }
+
+    /* ============ 留资提交 ============ */
+    async function submitLead() {
+      const name = $("lead-name").value.trim();
+      const phone = $("lead-phone").value.replace(/\D/g, "");
+      const city = $("lead-city").value.trim();
+      const company = $("lead-company").value.trim();
+      const err = $("lead-error");
+
+      if (!name) { err.textContent = "请填写称呼。"; return; }
+      if (!/^1\d{10}$/.test(phone)) { err.textContent = "请填写有效的 11 位手机号。"; return; }
+      err.textContent = "";
+      const btn = $("lead-submit");
+      btn.disabled = true; btn.textContent = "提交中…";
+
+      const judgement = finalResult.kind === "red"
+        ? "红灯·" + RED_RESULTS[finalResult.code].title
+        : (tierOf(finalResult.score).label + "·" + finalResult.score + "/24 分");
+
+      const answersMap = { "称呼": name };
+      if (city) answersMap["城市"] = city;
+      if (company) answersMap["机构"] = company;
+      answers.forEach(a => { answersMap[a.key] = a.v + "·" + a.text; });
+
+      const payload = {
+        phone,
+        submittedAt: new Date().toISOString(),
+        sourcePath: "/tools/health-revenue/assessment.html",
+        answers: answersMap,
+        result: {
+          judgement,
+          tool: "fit-assessment",
+          kind: finalResult.kind,
+          redLight: finalResult.kind === "red" ? finalResult.code : "",
+          score: finalResult.kind === "tier" ? finalResult.score : null,
+          name, city, company
+        }
+      };
+
+      let stored = false;
+      try {
+        const res = await fetch("/api/leads", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        stored = res.ok;
+      } catch (e) { stored = false; }
+
+      btn.disabled = false; btn.textContent = "提交，查看我的结果";
+      $("submit-note").textContent = stored ? "" : "网络原因结果暂未回传，不影响查看。也欢迎直接加微信告诉我们你的情况。";
+      showResult();
+    }
+
+    function tierOf(score) {
+      return TIERS.find(t => score >= t.min && score <= t.max) || TIERS[0];
+    }
+
+    /* ============ 展示结果 ============ */
+    function showResult() {
+      const v = $("verdict"), body = $("result-body"), cta = $("cta-card");
+      body.innerHTML = ""; cta.innerHTML = "";
+
+      if (finalResult.kind === "red") {
+        const r = RED_RESULTS[finalResult.code];
+        v.textContent = "现在先不建议";
+        v.className = "verdict stop";
+        $("result-title").textContent = r.title;
+        $("score-line").textContent = "触发红灯项，本次不按分数评级";
+        r.body.forEach(t => { const p = document.createElement("p"); p.textContent = t; body.appendChild(p); });
+        cta.innerHTML = "<h3>" + r.cta.title + "</h3><p>" + r.cta.desc + "</p>";
+      } else {
+        const t = tierOf(finalResult.score);
+        v.textContent = t.label;
+        v.className = "verdict " + t.cls;
+        $("result-title").textContent = t.title;
+        $("score-line").textContent = "你的得分：" + finalResult.score + " / 24";
+        t.body.forEach(x => { const p = document.createElement("p"); p.textContent = x; body.appendChild(p); });
+        if (t.steps) {
+          const ul = document.createElement("ul"); ul.className = "next-steps";
+          t.steps.forEach(s => { const li = document.createElement("li"); li.textContent = s; ul.appendChild(li); });
+          body.appendChild(ul);
+        }
+        cta.innerHTML = "<h3>" + t.cta.title + "</h3><p>" + t.cta.desc + "</p>";
+      }
+      show("s-result");
+    }
+
+    function restart() { show("s-landing"); }
+  </script>
 </body>
 </html>
