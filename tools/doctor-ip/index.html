@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>医生IP起步自测：10题看清你的起步方式</title>
+  <meta name="description" content="3分钟自测：你的科室适不适合做医生IP、适合哪个平台、第一步从哪里开始。《让好医生被看见》课程配套工具。">
+  <style>
+    :root {
+      --canvas: #f4f3ec;
+      --paper: #fffdf7;
+      --ink: #1f2621;
+      --muted: #70766d;
+      --line: #d8d6ca;
+      --moss: #2f6958;
+      --moss-deep: #173a32;
+      --brass: #aa7c38;
+      --red: #a2503c;
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px 16px 48px;
+      display: grid;
+      place-items: start center;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(47, 105, 88, 0.12), transparent 280px),
+        var(--canvas);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+    main {
+      width: min(680px, 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: 0 22px 55px rgba(30, 36, 31, 0.12);
+      overflow: hidden;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ---- 首屏 ---- */
+    .hero {
+      padding: clamp(28px, 6vw, 52px);
+      color: #fffaf0;
+      background: var(--moss-deep);
+    }
+    .eyebrow { margin: 0 0 12px; color: #b8cfc5; font-size: 12px; font-weight: 700; letter-spacing: .18em; }
+    .hero h1 { margin: 0; font-size: clamp(24px, 5.4vw, 34px); line-height: 1.4; }
+    .hero .sub { margin: 14px 0 0; color: rgba(255, 250, 240, .82); font-size: 15px; }
+    .hero-body { padding: clamp(24px, 5vw, 40px); }
+    .hero-body p { margin: 0 0 14px; color: var(--muted); font-size: 14.5px; }
+    .worry-list { margin: 0 0 22px; padding: 0; list-style: none; }
+    .worry-list li {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      font-size: 14.5px;
+    }
+    .worry-list li span { color: var(--brass); font-weight: 700; margin-right: 8px; }
+    .note { font-size: 12.5px; color: var(--muted); }
+
+    /* ---- 按钮 ---- */
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 15px 20px;
+      border: 0;
+      border-radius: var(--radius);
+      background: var(--moss);
+      color: #fffaf0;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active { background: var(--moss-deep); }
+    .btn[disabled] { opacity: .45; cursor: not-allowed; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      font-weight: 400;
+      font-size: 14px;
+      padding: 11px 20px;
+    }
+
+    /* ---- 答题屏 ---- */
+    .quiz { padding: clamp(24px, 5vw, 40px); }
+    .progress-track { height: 4px; border-radius: 2px; background: var(--line); margin-bottom: 26px; overflow: hidden; }
+    .progress-fill { height: 100%; width: 0; background: var(--brass); transition: width .3s ease; }
+    .q-no { font-size: 12px; letter-spacing: .2em; color: var(--brass); font-weight: 700; }
+    .q-text { margin: 10px 0 4px; font-size: clamp(18px, 4.6vw, 22px); font-weight: 700; line-height: 1.5; }
+    .q-hint { margin: 0 0 18px; font-size: 13px; color: var(--muted); }
+    .options { display: grid; gap: 10px; margin-top: 18px; }
+    .option {
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      font-size: 15px;
+      text-align: left;
+      cursor: pointer;
+      line-height: 1.55;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color .15s, background .15s;
+    }
+    .option:active, .option.selected { border-color: var(--moss); background: rgba(47, 105, 88, .08); }
+    .quiz-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; gap: 12px; }
+    .back-link { background: none; border: 0; color: var(--muted); font-size: 13.5px; cursor: pointer; padding: 6px 0; }
+
+    /* ---- 结果屏 ---- */
+    .result { padding: clamp(24px, 5vw, 40px); }
+    .verdict {
+      display: inline-block;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .verdict.go { background: rgba(47, 105, 88, .12); color: var(--moss-deep); }
+    .verdict.hold { background: rgba(170, 124, 56, .14); color: #7c5a28; }
+    .result h2 { margin: 0 0 6px; font-size: clamp(20px, 5vw, 26px); line-height: 1.45; }
+    .score-line { font-size: 13.5px; color: var(--muted); margin: 0 0 18px; }
+    .result-body p { margin: 0 0 12px; font-size: 15px; }
+    .platform-card {
+      margin: 18px 0;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--moss);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      background: #fff;
+    }
+    .platform-card h3 { margin: 0 0 6px; font-size: 16px; }
+    .platform-card p { margin: 0 0 6px; font-size: 14px; color: var(--muted); }
+    .next-steps { margin: 6px 0 0; padding: 0 0 0 2px; list-style: none; }
+    .next-steps li { padding: 8px 0 8px 22px; position: relative; font-size: 14.5px; }
+    .next-steps li::before { content: ""; position: absolute; left: 4px; top: 17px; width: 7px; height: 7px; border-radius: 50%; background: var(--brass); }
+    .remind {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: rgba(162, 80, 60, .08);
+      color: var(--red);
+      font-size: 13.5px;
+    }
+    .homework {
+      margin-top: 22px;
+      border-radius: var(--radius);
+      background: var(--moss-deep);
+      color: #fffaf0;
+      padding: 20px 18px;
+      font-size: 14.5px;
+    }
+    .homework strong { color: #d8b97e; }
+
+    /* ---- 选填留资 ---- */
+    .lead-opt {
+      margin-top: 22px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: #fff;
+    }
+    .lead-opt h3 { margin: 0 0 6px; font-size: 15.5px; }
+    .lead-opt p { margin: 0 0 14px; font-size: 13px; color: var(--muted); }
+    .field { margin-bottom: 12px; }
+    .field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 5px; }
+    .field input {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-size: 16px;
+      background: #fff;
+      color: var(--ink);
+    }
+    .field input:focus { outline: 2px solid var(--moss); outline-offset: 1px; border-color: var(--moss); }
+    .form-error { color: var(--red); font-size: 13px; min-height: 18px; margin: 2px 0 6px; }
+    .privacy { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+    .restart { margin-top: 20px; text-align: center; }
+
+    .foot {
+      padding: 18px clamp(24px, 5vw, 40px) 26px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .foot a { color: var(--moss); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <!-- 首屏 -->
+    <section class="screen active" id="s-landing">
+      <div class="hero">
+        <p class="eyebrow">10 题 · 约 3 分钟</p>
+        <h1>医生 IP 起步自测</h1>
+        <p class="sub">《让好医生被看见》课程配套 · 讲师 李之奇</p>
+      </div>
+      <div class="hero-body">
+        <p>做医生 IP，多数人卡住的不是能力，是三个问题：</p>
+        <ul class="worry-list">
+          <li><span>01</span>我的科室适不适合做？</li>
+          <li><span>02</span>我适合先做哪个平台？</li>
+          <li><span>03</span>第一步从哪里开始？</li>
+        </ul>
+        <button class="btn" onclick="startQuiz()">开始自测</button>
+        <p class="note" style="margin-top:14px;">这份自测不判断你"行不行"——医生身份自带信任起点。它帮你看清：按你现在的科室、时间和资源，从哪种方式起步最省力。请按真实情况选择。</p>
+      </div>
+    </section>
+
+    <!-- 答题屏 -->
+    <section class="screen" id="s-quiz">
+      <div class="quiz">
+        <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+        <span class="q-no" id="q-no"></span>
+        <h2 class="q-text" id="q-text"></h2>
+        <p class="q-hint" id="q-hint"></p>
+        <div class="options" id="options"></div>
+        <div class="quiz-foot">
+          <button class="back-link" id="back-btn" onclick="goBack()">← 上一题</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 结果屏 -->
+    <section class="screen" id="s-result">
+      <div class="result">
+        <span class="verdict" id="verdict"></span>
+        <h2 id="result-title"></h2>
+        <p class="score-line" id="score-line"></p>
+        <div class="result-body" id="result-body"></div>
+        <div class="platform-card" id="platform-card"></div>
+        <div id="remind-box"></div>
+        <div class="homework">
+          把你的<strong>档位</strong>和<strong>推荐平台</strong>填到课堂作业单第 1 题，后面的题会用到它。
+        </div>
+
+        <div class="lead-opt" id="lead-opt">
+          <h3>想让讲师团队帮你把起步方案捋一遍？（选填）</h3>
+          <p>留下联系方式，课后会有一次一对一沟通。不留也完全不影响使用结果。</p>
+          <div class="field">
+            <label for="lead-name">你的称呼</label>
+            <input id="lead-name" type="text" maxlength="30" placeholder="例：王主任">
+          </div>
+          <div class="field">
+            <label for="lead-phone">手机号</label>
+            <input id="lead-phone" type="tel" maxlength="11" inputmode="numeric" placeholder="11 位手机号">
+          </div>
+          <div class="field">
+            <label for="lead-hospital">医院 / 科室（选填）</label>
+            <input id="lead-hospital" type="text" maxlength="60" placeholder="例：××医院 心内科">
+          </div>
+          <p class="form-error" id="lead-error"></p>
+          <button class="btn" id="lead-submit" onclick="submitLead()">提交</button>
+          <p class="privacy">信息仅用于课后沟通，不对外公开。</p>
+        </div>
+
+        <div class="restart">
+          <button class="btn-ghost btn" style="width:auto;" onclick="restart()">重新测一次</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="foot">
+      <span>课堂配套工具</span>
+      <a href="/">dr-yuan.org</a>
+    </div>
+  </main>
+
+  <script>
+    /* ============ 题库：8 题计分（24 分制）+ 2 题定型（科室 / 表达形式）============ */
+    const QUESTIONS = [
+      {
+        key: "科室类型", type: "dept",
+        text: "你所在的科室更接近哪一类？",
+        options: [
+          { v: "A", text: "患者主动选择属性强：皮肤、口腔、眼科、妇产、儿科、生殖、康复、疼痛、中医等" },
+          { v: "B", text: "慢病长期管理：内分泌、心内、呼吸、消化、肾内、神经内科等" },
+          { v: "C", text: "严肃 / 急重症：肿瘤、外科手术科室、急诊、重症、麻醉等" },
+          { v: "D", text: "平台 / 辅助科室：检验、影像、药剂、护理、院感、行政管理等" }
+        ]
+      },
+      {
+        key: "患者来源",
+        text: "现在你的患者是怎么找到你的？",
+        options: [
+          { v: "A", text: "基本按排班分诊，患者不怎么挑医生", score: 0 },
+          { v: "B", text: "主要靠院内口碑，老患者带新患者", score: 1 },
+          { v: "C", text: "已经有患者点名挂我的号", score: 2 },
+          { v: "D", text: "有患者从外地或网上慕名来找我", score: 3 }
+        ]
+      },
+      {
+        key: "患者做功课",
+        text: "你的患者或家属，就诊前会在网上做功课吗？",
+        options: [
+          { v: "A", text: "很少，基本听医生安排", score: 0 },
+          { v: "B", text: "有一部分会搜一搜", score: 1 },
+          { v: "C", text: "多数会带着网上看来的说法来问", score: 2 },
+          { v: "D", text: "经常有人拿着短视频或帖子对着问", score: 3 }
+        ]
+      },
+      {
+        key: "高频问题",
+        text: "你的科室有没有患者反复问的高频问题？",
+        hint: "高频问题就是你的选题库",
+        options: [
+          { v: "A", text: "一时想不出来", score: 0 },
+          { v: "B", text: "有几个，但觉得没什么好讲的", score: 1 },
+          { v: "C", text: "有不少，门诊里天天在重复回答", score: 2 },
+          { v: "D", text: "一抓一大把，还有大量流传的错误说法等着纠正", score: 3 }
+        ]
+      },
+      {
+        key: "镜头状态",
+        text: "面对镜头说话，你的状态是？",
+        options: [
+          { v: "A", text: "很不自在，能躲就躲", score: 0 },
+          { v: "B", text: "需要写稿、背稿才敢拍", score: 1 },
+          { v: "C", text: "给个提纲就能讲", score: 2 },
+          { v: "D", text: "跟出门诊聊天一样自然", score: 3 }
+        ]
+      },
+      {
+        key: "表达形式", type: "form",
+        text: "你更愿意用哪种形式输出？",
+        options: [
+          { v: "A", text: "出镜口播，讲知识、答疑" },
+          { v: "B", text: "门诊、查房等真实场景记录" },
+          { v: "C", text: "图文、长文科普" },
+          { v: "D", text: "还不确定，想先看看别人怎么做" }
+        ]
+      },
+      {
+        key: "每周时间",
+        text: "每周能稳定拿出多少时间做内容？",
+        options: [
+          { v: "A", text: "几乎挤不出来", score: 0 },
+          { v: "B", text: "1 小时以内", score: 1 },
+          { v: "C", text: "1–3 小时", score: 2 },
+          { v: "D", text: "3 小时以上", score: 3 }
+        ]
+      },
+      {
+        key: "冷启动心态",
+        text: "如果前 20 条内容数据都很平，你会？",
+        options: [
+          { v: "A", text: "大概率就停了", score: 0 },
+          { v: "B", text: "会很受打击，不确定能不能坚持", score: 1 },
+          { v: "C", text: "能接受，但希望有人告诉我问题在哪", score: 2 },
+          { v: "D", text: "能接受，起号本来就需要时间", score: 3 }
+        ]
+      },
+      {
+        key: "科室帮手",
+        text: "科室里有没有能搭把手的人（拍摄、剪辑、运营）？",
+        options: [
+          { v: "A", text: "没有，只能靠自己", score: 0 },
+          { v: "B", text: "有年轻人，但没提过这件事", score: 1 },
+          { v: "C", text: "有，提一提应该愿意帮忙", score: 2 },
+          { v: "D", text: "有，已经有人在帮我或帮科室号做内容", score: 3 }
+        ]
+      },
+      {
+        key: "医院态度",
+        text: "医院和宣传科对医生做自媒体的态度是？",
+        options: [
+          { v: "A", text: "比较谨慎，可能不太支持", score: 0, remind: true },
+          { v: "B", text: "没了解过，不知道医院的口径", score: 1, remind: true },
+          { v: "C", text: "中性，没有明确限制", score: 2 },
+          { v: "D", text: "明确鼓励，已经有医生在做", score: 3 }
+        ]
+      }
+    ];
+
+    /* ============ 分数档结论（0–24 分）============ */
+    const TIERS = [
+      {
+        min: 0, max: 6, label: "观察积累型", cls: "hold",
+        title: "先别硬拍，从建选题库开始",
+        body: [
+          "按你现在的情况，直接开拍大概率坚持不下来。更省力的起步方式是先积累：看懂同科室的账号在讲什么，把门诊里被问烦的问题记下来。",
+          "等选题攒够 20 条、时间和帮手有一样解决了，再开拍不迟。"
+        ],
+        steps: ["每天花 10 分钟刷 3 个同科室医生账号，记下他们讲了什么", "手机备忘录建一个选题库，门诊里每被重复问一次就记一条"]
+      },
+      {
+        min: 7, max: 12, label: "蓄力筹备型", cls: "hold",
+        title: "先解决一两个卡点，再发第一条",
+        body: [
+          "你有基础，但时间、帮手或医院口径里通常有一两个卡点没解决。先把卡点拆掉，起步会顺很多。",
+          "如果自己出镜有压力，也可以先从科室号共建开始——你出专业内容，让科室年轻人出镜或运营。"
+        ],
+        steps: ["先跟医院宣传科沟通，拿到明确口径", "在科室里找到那个愿意搭手的年轻人", "从每周 1 条、不追数据开始"]
+      },
+      {
+        min: 13, max: 18, label: "单点聚焦型", cls: "go",
+        title: "适合选定一个平台，先跑 90 天",
+        body: [
+          "你的条件已经够起步了。这个阶段最容易犯的错是贪多：几个平台一起开、什么都想讲。",
+          "更稳的打法是：一个平台、一类选题（就从门诊高频问题开始）、每周固定 1–2 条，跑满 90 天再复盘。"
+        ],
+        steps: ["按下面的平台建议开一个号，完成职业认证", "列出前 10 条选题，全部来自门诊高频问题", "定一个雷打不动的拍摄时间，比如每周三中午"]
+      },
+      {
+        min: 19, max: 24, label: "直接起号型", cls: "go",
+        title: "条件基本齐了，别再等",
+        body: [
+          "患者基础、表达能力、时间和支持你都有，你缺的只是开始。像你这样条件的医生，最大的风险不是做不好，而是被同科室先做的人抢走位置。",
+          "建议两周内发出第一条，先完成再完善。"
+        ],
+        steps: ["两周内发第一条：就讲你被问得最多的那个问题", "前 20 条不看数据，只练表达和节奏", "第一个月结束时，把数据最好的 3 条翻拍加深"]
+      }
+    ];
+
+    /* ============ 平台建议：表达形式为主，科室类型加权 ============ */
+    const FORM_RECO = {
+      A: { name: "抖音 + 视频号双发", why: "口播是最通用的形式：抖音吃泛人群流量，视频号离本地中老年患者最近，一条内容两边发。" },
+      B: { name: "视频号为主，抖音同步", why: "真实场景内容在微信生态里传播最自然。注意：涉及患者画面必须先拿授权。" },
+      C: { name: "公众号 + 小红书", why: "图文是你能稳定输出的形式。小红书适合年轻患者和家属决策的科室，公众号放得住长内容。" },
+      D: { name: "先从视频号开始", why: "微信生态离本地患者最近，熟人转发压力小，适合边做边找感觉。" }
+    };
+    const DEPT_NOTE = {
+      A: "你的科室患者主动选择属性强，内容起量后挂号转化会比较直接，小红书值得多加一条腿。",
+      B: "慢病患者黏性高、家属参与决策多，视频号加患者群的组合尤其适合你。",
+      C: "严肃医疗科室走权威科普路线：讲清疾病认知和就诊时机，建立信任与转诊心智，不追热点。",
+      D: "平台科室建议做科室号或医院号共建：你出专业内容，科室年轻人出镜或运营。"
+    };
+
+    /* ============ 状态与流程 ============ */
+    let idx = 0;
+    let answers = [];
+
+    const $ = (id) => document.getElementById(id);
+    function show(id) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      $(id).classList.add("active");
+      window.scrollTo(0, 0);
+    }
+
+    function startQuiz() {
+      idx = 0; answers = [];
+      show("s-quiz");
+      render();
+    }
+
+    function render() {
+      const q = QUESTIONS[idx];
+      $("q-no").textContent = "第 " + (idx + 1) + " 题 / 共 " + QUESTIONS.length + " 题";
+      $("q-text").textContent = q.text;
+      $("q-hint").textContent = q.hint || "";
+      $("q-hint").style.display = q.hint ? "block" : "none";
+      $("back-btn").style.visibility = idx === 0 ? "hidden" : "visible";
+      $("progress").style.width = Math.round(idx / QUESTIONS.length * 100) + "%";
+
+      const box = $("options");
+      box.innerHTML = "";
+      q.options.forEach(opt => {
+        const b = document.createElement("button");
+        b.className = "option";
+        b.textContent = opt.v + ". " + opt.text;
+        b.onclick = () => pick(opt, q);
+        box.appendChild(b);
+      });
+    }
+
+    let locked = false;
+    function pick(opt, q) {
+      if (locked) return;
+      locked = true;
+      answers = answers.filter(a => a.key !== q.key);
+      answers.push({ key: q.key, v: opt.v, text: opt.text, score: opt.score || 0, type: q.type || null, remind: !!opt.remind });
+      setTimeout(() => {
+        locked = false;
+        if (idx < QUESTIONS.length - 1) { idx += 1; render(); }
+        else { showResult(); }
+      }, 160);
+    }
+
+    function goBack() {
+      if (idx === 0) return;
+      const prevKey = QUESTIONS[idx - 1].key;
+      answers = answers.filter(a => a.key !== prevKey);
+      idx -= 1;
+      render();
+    }
+
+    function tierOf(score) {
+      return TIERS.find(t => score >= t.min && score <= t.max) || TIERS[0];
+    }
+    function answerOf(key) {
+      return answers.find(a => a.key === key) || null;
+    }
+
+    /* ============ 展示结果 ============ */
+    let finalScore = 0, finalTier = null, finalReco = null;
+
+    function showResult() {
+      $("progress").style.width = "100%";
+      finalScore = answers.reduce((s, a) => s + (a.score || 0), 0);
+      finalTier = tierOf(finalScore);
+
+      const dept = answerOf("科室类型"), form = answerOf("表达形式");
+      finalReco = FORM_RECO[form ? form.v : "D"];
+
+      $("verdict").textContent = finalTier.label;
+      $("verdict").className = "verdict " + finalTier.cls;
+      $("result-title").textContent = finalTier.title;
+      $("score-line").textContent = "你的得分：" + finalScore + " / 24 · 档位：" + finalTier.label;
+
+      const body = $("result-body");
+      body.innerHTML = "";
+      finalTier.body.forEach(t => { const p = document.createElement("p"); p.textContent = t; body.appendChild(p); });
+      const ul = document.createElement("ul"); ul.className = "next-steps";
+      finalTier.steps.forEach(s => { const li = document.createElement("li"); li.textContent = s; ul.appendChild(li); });
+      body.appendChild(ul);
+
+      $("platform-card").innerHTML =
+        "<h3>平台建议：" + finalReco.name + "</h3>" +
+        "<p>" + finalReco.why + "</p>" +
+        (dept ? "<p>" + DEPT_NOTE[dept.v] + "</p>" : "");
+
+      const remindBox = $("remind-box");
+      remindBox.innerHTML = "";
+      if (answers.some(a => a.remind)) {
+        const d = document.createElement("div");
+        d.className = "remind";
+        d.textContent = "提醒：开始之前，先跟医院宣传科打个招呼、拿到口径再发第一条。别让领导从抖音上“发现”你。";
+        remindBox.appendChild(d);
+      }
+      show("s-result");
+    }
+
+    /* ============ 选填留资 ============ */
+    async function submitLead() {
+      const name = $("lead-name").value.trim();
+      const phone = $("lead-phone").value.replace(/\D/g, "");
+      const hospital = $("lead-hospital").value.trim();
+      const err = $("lead-error");
+
+      if (!name) { err.textContent = "请填写称呼。"; return; }
+      if (!/^1\d{10}$/.test(phone)) { err.textContent = "请填写有效的 11 位手机号。"; return; }
+      err.textContent = "";
+      const btn = $("lead-submit");
+      btn.disabled = true; btn.textContent = "提交中…";
+
+      const answersMap = { "称呼": name };
+      if (hospital) answersMap["医院科室"] = hospital;
+      answers.forEach(a => { answersMap[a.key] = a.v + "·" + a.text; });
+
+      const payload = {
+        phone,
+        submittedAt: new Date().toISOString(),
+        sourcePath: "/tools/doctor-ip/",
+        answers: answersMap,
+        result: {
+          judgement: "医生IP自测·" + finalTier.label + "·" + finalScore + "/24 分",
+          tool: "doctor-ip-assessment",
+          kind: "tier",
+          score: finalScore,
+          platform: finalReco ? finalReco.name : "",
+          name, hospital
+        }
+      };
+
+      let stored = false;
+      try {
+        const res = await fetch("/api/leads", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        stored = res.ok;
+      } catch (e) { stored = false; }
+
+      if (stored) {
+        $("lead-opt").innerHTML = "<h3>已收到。</h3><p>课后会有讲师团队跟你联系，做一次一对一沟通。</p>";
+      } else {
+        btn.disabled = false; btn.textContent = "提交";
+        err.textContent = "网络原因暂时没提交上，可以稍后再试，不影响查看结果。";
+      }
+    }
+
+    function restart() { show("s-landing"); }
+  </script>
+</body>
+</html>
