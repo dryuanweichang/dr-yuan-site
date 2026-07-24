@@ -1,0 +1,1026 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>代理商动销 × 个人IP 双维评估 | 金牌服务商</title>
+  <meta name="description" content="25 题，约 6-8 分钟：看清你的动销业务处在什么阶段、个人IP该怎么起步。金牌服务商出品。">
+  <style>
+    :root {
+      --canvas: #f7f2ee;
+      --paper: #fffdfa;
+      --ink: #241b18;
+      --muted: #7d6f69;
+      --line: #e3d8d0;
+      --red: #a51522;
+      --red-deep: #7c0f19;
+      --red-soft: rgba(165, 21, 34, 0.07);
+      --gold: #c9a15c;
+      --gold-deep: #a07a35;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px 16px 48px;
+      display: grid;
+      place-items: start center;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(165, 21, 34, 0.10), transparent 300px),
+        var(--canvas);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+    main {
+      width: min(680px, 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: 0 22px 55px rgba(80, 20, 24, 0.14);
+      overflow: hidden;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ---- 首屏 ---- */
+    .hero {
+      padding: clamp(28px, 6vw, 48px) clamp(24px, 6vw, 48px) clamp(24px, 5vw, 40px);
+      color: #fff8ef;
+      text-align: center;
+      background: linear-gradient(160deg, var(--red) 0%, var(--red-deep) 100%);
+    }
+    .hero .logo { width: clamp(96px, 26vw, 132px); display: block; margin: 0 auto 14px; }
+    .eyebrow { margin: 0 0 10px; color: #ecc98f; font-size: 12px; font-weight: 700; letter-spacing: .22em; }
+    .hero h1 { margin: 0; font-size: clamp(23px, 5.4vw, 32px); line-height: 1.42; }
+    .hero .sub { margin: 12px 0 0; color: rgba(255, 248, 239, .82); font-size: 14.5px; }
+    .hero-body { padding: clamp(24px, 5vw, 40px); }
+    .hero-body p { margin: 0 0 14px; color: var(--muted); font-size: 14.5px; }
+    .worry-list { margin: 0 0 22px; padding: 0; list-style: none; }
+    .worry-list li {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      font-size: 14.5px;
+      text-align: left;
+    }
+    .worry-list li span { color: var(--gold-deep); font-weight: 700; margin-right: 8px; }
+    .note { font-size: 12.5px; color: var(--muted); }
+
+    /* ---- 按钮 ---- */
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 15px 20px;
+      border: 0;
+      border-radius: var(--radius);
+      background: var(--red);
+      color: #fff8ef;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active { background: var(--red-deep); }
+    .btn[disabled] { opacity: .45; cursor: not-allowed; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      font-weight: 400;
+      font-size: 14px;
+      padding: 11px 20px;
+    }
+
+    /* ---- 分部导入屏 ---- */
+    .part-intro { padding: clamp(32px, 7vw, 52px) clamp(24px, 5vw, 40px); text-align: center; }
+    .part-tag {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: var(--red-soft);
+      color: var(--red);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      margin-bottom: 16px;
+    }
+    .part-intro h2 { margin: 0 0 10px; font-size: clamp(20px, 5vw, 26px); }
+    .part-intro p { margin: 0 auto 24px; max-width: 440px; color: var(--muted); font-size: 14.5px; }
+
+    /* ---- 答题屏 ---- */
+    .quiz { padding: clamp(24px, 5vw, 40px); }
+    .progress-track { height: 4px; border-radius: 2px; background: var(--line); margin-bottom: 26px; overflow: hidden; }
+    .progress-fill { height: 100%; width: 0; background: var(--gold); transition: width .3s ease; }
+    .q-part { font-size: 11.5px; letter-spacing: .16em; color: var(--muted); font-weight: 700; }
+    .q-no { font-size: 12px; letter-spacing: .2em; color: var(--gold-deep); font-weight: 700; }
+    .q-text { margin: 10px 0 4px; font-size: clamp(18px, 4.6vw, 22px); font-weight: 700; line-height: 1.5; }
+    .q-hint { margin: 0 0 18px; font-size: 13px; color: var(--muted); }
+    .options { display: grid; gap: 10px; margin-top: 18px; }
+    .option {
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      font-size: 15px;
+      text-align: left;
+      cursor: pointer;
+      line-height: 1.55;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color .15s, background .15s;
+      color: var(--ink);
+      font-family: inherit;
+    }
+    .option:active, .option.selected { border-color: var(--red); background: var(--red-soft); }
+    .quiz-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; gap: 12px; }
+    .back-link { background: none; border: 0; color: var(--muted); font-size: 13.5px; cursor: pointer; padding: 6px 0; }
+
+    /* ---- 结果屏 ---- */
+    .result { padding: clamp(24px, 5vw, 40px); }
+    .result-head { text-align: center; margin-bottom: 22px; }
+    .result-head .logo-sm { width: 74px; display: block; margin: 0 auto 8px; }
+    .result-head .brand-line { font-size: 12px; letter-spacing: .2em; color: var(--gold-deep); font-weight: 700; }
+    .tier-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 18px 0 6px; }
+    .tier-card {
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--red);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 14px 12px;
+      text-align: center;
+    }
+    .tier-card .dim { font-size: 12px; color: var(--muted); letter-spacing: .1em; }
+    .tier-card .tier-name { font-size: clamp(16px, 4.4vw, 19px); font-weight: 800; color: var(--red); margin: 4px 0 2px; }
+    .tier-card .tier-score { font-size: 12px; color: var(--muted); }
+    .headline { text-align: center; font-size: clamp(18px, 4.8vw, 23px); font-weight: 700; margin: 14px 0 4px; line-height: 1.5; }
+    .score-line { font-size: 13px; color: var(--muted); margin: 0 0 4px; text-align: center; }
+
+    .diag-block {
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      overflow: hidden;
+    }
+    .diag-block .diag-head {
+      padding: 12px 18px;
+      background: var(--red-soft);
+      color: var(--red);
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .diag-block .diag-body { padding: 16px 18px; }
+    .diag-body p { margin: 0 0 12px; font-size: 14.5px; }
+    .diag-body p:last-child { margin-bottom: 0; }
+    .weak-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(201, 161, 92, .16);
+      color: var(--gold-deep);
+      font-size: 12.5px;
+      font-weight: 700;
+      margin-right: 6px;
+    }
+    .next-steps { margin: 8px 0 0; padding: 0; list-style: none; }
+    .next-steps li { padding: 7px 0 7px 22px; position: relative; font-size: 14.5px; }
+    .next-steps li::before { content: ""; position: absolute; left: 4px; top: 16px; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+
+    .combo-note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      background: var(--red-soft);
+      font-size: 14.5px;
+    }
+
+    /* ---- CTA ---- */
+    .cta {
+      margin-top: 24px;
+      border-radius: var(--radius);
+      background: linear-gradient(160deg, var(--red) 0%, var(--red-deep) 100%);
+      color: #fff8ef;
+      padding: 22px 20px;
+      text-align: center;
+    }
+    .cta h3 { margin: 0 0 8px; font-size: 17.5px; }
+    .cta p { margin: 0 0 6px; font-size: 14px; color: rgba(255, 248, 239, .88); }
+    .cta .steps { margin: 12px 0; padding: 0; list-style: none; text-align: left; display: inline-block; }
+    .cta .steps li { font-size: 14.5px; padding: 4px 0; }
+    .cta .steps b { color: #ecc98f; margin-right: 6px; }
+    .qr-box {
+      width: 168px;
+      margin: 14px auto 4px;
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 10px;
+    }
+    .qr-box img { width: 100%; display: block; border-radius: 4px; }
+    .qr-fallback {
+      display: none;
+      color: var(--red-deep);
+      font-size: 13px;
+      padding: 28px 6px;
+      line-height: 1.6;
+    }
+    .qr-box.missing img { display: none; }
+    .qr-box.missing .qr-fallback { display: block; }
+    .cta .small { font-size: 12px; color: rgba(255, 248, 239, .65); margin-top: 8px; }
+
+    /* ---- 选填留资 ---- */
+    .lead-opt {
+      margin-top: 22px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: #fff;
+    }
+    .lead-opt h3 { margin: 0 0 6px; font-size: 15.5px; }
+    .lead-opt p { margin: 0 0 14px; font-size: 13px; color: var(--muted); }
+    .field { margin-bottom: 12px; }
+    .field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 5px; }
+    .field input {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-size: 16px;
+      background: #fff;
+      color: var(--ink);
+    }
+    .field input:focus { outline: 2px solid var(--red); outline-offset: 1px; border-color: var(--red); }
+    .form-error { color: var(--red); font-size: 13px; min-height: 18px; margin: 2px 0 6px; }
+    .privacy { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+    .restart { margin-top: 20px; text-align: center; }
+
+    .foot {
+      padding: 18px clamp(24px, 5vw, 40px) 26px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      font-size: 12.5px;
+      color: var(--muted);
+      letter-spacing: .06em;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <!-- 首屏 -->
+    <section class="screen active" id="s-landing">
+      <div class="hero">
+        <img class="logo" src="logo.png" alt="金牌服务商">
+        <p class="eyebrow">25 题 · 约 6–8 分钟</p>
+        <h1>代理商动销 × 个人IP<br>双维评估</h1>
+        <p class="sub">医美上游代理商成长力评估 · 金牌服务商出品</p>
+      </div>
+      <div class="hero-body">
+        <p>做医美上游代理，业绩卡住的往往不是产品，而是三件事：</p>
+        <ul class="worry-list">
+          <li><span>01</span>机构开了户，动销就是起不来，问题出在哪一环？</li>
+          <li><span>02</span>团队推不动、案例出不来，先补哪一块？</li>
+          <li><span>03</span>老板要不要做个人IP？做了怎么接住客人？</li>
+        </ul>
+        <button class="btn" onclick="startQuiz()">开始评估</button>
+        <p class="note" style="margin-top:14px;">动销是一套系统：任何一个环节等于零，整体就等于零。这份评估帮你定位自己处在哪个阶段、最薄弱的环节是什么。请按真实情况选择，结果只有你自己能看到。</p>
+      </div>
+    </section>
+
+    <!-- B 部分导入屏 -->
+    <section class="screen" id="s-part-b">
+      <div class="part-intro">
+        <span class="part-tag">第二部分 · 个人IP评估</span>
+        <h2>业务部分完成，还剩 10 题</h2>
+        <p>线上流量正在改写上游生意：会做内容的代理商，见机构老板的效率完全不同。接下来看看你的个人IP处在什么位置。</p>
+        <button class="btn" style="width:auto; padding:14px 44px;" onclick="continuePartB()">继续</button>
+      </div>
+    </section>
+
+    <!-- 答题屏 -->
+    <section class="screen" id="s-quiz">
+      <div class="quiz">
+        <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+        <span class="q-part" id="q-part"></span><br>
+        <span class="q-no" id="q-no"></span>
+        <h2 class="q-text" id="q-text"></h2>
+        <p class="q-hint" id="q-hint"></p>
+        <div class="options" id="options"></div>
+        <div class="quiz-foot">
+          <button class="back-link" id="back-btn" onclick="goBack()">← 上一题</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 结果屏 -->
+    <section class="screen" id="s-result">
+      <div class="result">
+        <div class="result-head">
+          <img class="logo-sm" src="logo.png" alt="金牌服务商">
+          <div class="brand-line">金牌服务商 · 评估结果</div>
+        </div>
+
+        <div class="tier-row">
+          <div class="tier-card">
+            <div class="dim">动销业务</div>
+            <div class="tier-name" id="tier-a-name"></div>
+            <div class="tier-score" id="tier-a-score"></div>
+          </div>
+          <div class="tier-card">
+            <div class="dim">个人IP</div>
+            <div class="tier-name" id="tier-b-name"></div>
+            <div class="tier-score" id="tier-b-score"></div>
+          </div>
+        </div>
+        <h2 class="headline" id="headline"></h2>
+
+        <div class="diag-block">
+          <div class="diag-head">动销业务诊断</div>
+          <div class="diag-body" id="diag-a"></div>
+        </div>
+
+        <div class="diag-block">
+          <div class="diag-head">个人IP诊断</div>
+          <div class="diag-body" id="diag-b"></div>
+        </div>
+
+        <div class="combo-note" id="combo-note"></div>
+
+        <div class="cta">
+          <h3>下一步：预约一对一深度评估</h3>
+          <ul class="steps">
+            <li><b>①</b>把这页评估结果<b style="margin:0 2px;">截图保存</b></li>
+            <li><b>②</b>扫码添加「金牌服务商」之奇总助理微信</li>
+            <li><b>③</b>把截图发给助理，预约一对一深度评估</li>
+          </ul>
+          <div class="qr-box" id="qr-box">
+            <img src="assistant-qr.png" alt="之奇总助理微信二维码" onerror="document.getElementById('qr-box').classList.add('missing')">
+            <div class="qr-fallback">助理微信可在直播间<br>或视频评论区获取</div>
+          </div>
+          <p class="small">深度评估会结合你的机构盘、团队与账号现状，逐项过一遍。</p>
+        </div>
+
+        <div class="lead-opt" id="lead-opt">
+          <h3>也可以留下联系方式，助理主动联系你（选填）</h3>
+          <p>不留也完全不影响查看和保存结果。</p>
+          <div class="field">
+            <label for="lead-name">你的称呼</label>
+            <input id="lead-name" type="text" maxlength="30" placeholder="例：王总">
+          </div>
+          <div class="field">
+            <label for="lead-phone">手机号</label>
+            <input id="lead-phone" type="tel" maxlength="11" inputmode="numeric" placeholder="11 位手机号">
+          </div>
+          <div class="field">
+            <label for="lead-company">公司 / 负责区域（选填）</label>
+            <input id="lead-company" type="text" maxlength="60" placeholder="例：××商贸 江浙区域">
+          </div>
+          <p class="form-error" id="lead-error"></p>
+          <button class="btn" id="lead-submit" onclick="submitLead()">提交</button>
+          <p class="privacy">信息仅用于评估沟通，不对外公开。</p>
+        </div>
+
+        <div class="restart">
+          <button class="btn-ghost btn" style="width:auto;" onclick="restart()">重新测一次</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="foot">金牌服务商 · 动销增长实战体系</div>
+  </main>
+
+  <script>
+    /* ================================================================
+       题库
+       A 部分：动销业务评估 15 题（14 题计分 0-3 分 + 1 题卡点诊断）
+       B 部分：个人IP评估 10 题（均计分 0-3 分）
+       题目框架来自金牌服务商代理商经营底表（业务进度 / 客户分析 / 团队分析）
+       ================================================================ */
+    const QUESTIONS = [
+      /* ---------------- A 部分 ---------------- */
+      {
+        part: "A", key: "业务位置", factor: null,
+        text: "你代理的核心品项，目前在公司业务里的位置是？",
+        options: [
+          { v: "A", text: "基本停滞，或尚未正式启动", score: 0 },
+          { v: "B", text: "常规项目，有需求才顺带推", score: 1 },
+          { v: "C", text: "当前重点项目之一", score: 2 },
+          { v: "D", text: "公司核心主推项目", score: 3 }
+        ]
+      },
+      {
+        part: "A", key: "业务阶段", factor: null,
+        text: "你目前的业务阶段，更接近哪一种？",
+        options: [
+          { v: "A", text: "团队还在学习，尚未系统开发机构", score: 0 },
+          { v: "B", text: "正在筛选和拜访目标机构", score: 1 },
+          { v: "C", text: "已有开户机构和体验打板，但成交还不稳定", score: 2 },
+          { v: "D", text: "已有稳定复购机构，甚至有能对外分享的标杆", score: 3 }
+        ]
+      },
+      {
+        part: "A", key: "机构基本盘", factor: "覆盖",
+        text: "你长期合作或保持联系的机构客户，总共有多少家？",
+        options: [
+          { v: "A", text: "10 家以内", score: 0 },
+          { v: "B", text: "10–30 家", score: 1 },
+          { v: "C", text: "30–80 家", score: 2 },
+          { v: "D", text: "80 家以上", score: 3 }
+        ]
+      },
+      {
+        part: "A", key: "重点机构数", factor: "覆盖",
+        text: "这些机构里，真正适合重点推核心品项的有几家？",
+        hint: "有高质量老客、老板愿意推新品的那种",
+        options: [
+          { v: "A", text: "暂时说不上来", score: 0 },
+          { v: "B", text: "1–2 家", score: 1 },
+          { v: "C", text: "3–5 家", score: 2 },
+          { v: "D", text: "6 家以上", score: 3 }
+        ]
+      },
+      {
+        part: "A", key: "方案拜访量", factor: "覆盖",
+        text: "过去半年，你带着正式项目方案完成拜访的机构有多少家？",
+        options: [
+          { v: "A", text: "基本没有", score: 0 },
+          { v: "B", text: "1–5 家", score: 1 },
+          { v: "C", text: "6–15 家", score: 2 },
+          { v: "D", text: "15 家以上", score: 3 }
+        ]
+      },
+      {
+        part: "A", key: "开户启动率", factor: "启动转化",
+        text: "已开户的机构里，真正完成团队培训和首批打板的比例？",
+        options: [
+          { v: "A", text: "还没有开户机构", score: 0 },
+          { v: "B", text: "开了户，但大多迟迟没启动", score: 1 },
+          { v: "C", text: "大约一半完成了启动", score: 2 },
+          { v: "D", text: "大多数都完成了培训和打板", score: 3 }
+        ]
+      },
+      {
+        part: "A", key: "体验转疗程", factor: "启动转化",
+        text: "机构做完体验或打板之后，转成疗程成交的情况怎么样？",
+        options: [
+          { v: "A", text: "还没走到这一步", score: 0 },
+          { v: "B", text: "偶尔有成交，主要靠运气", score: 1 },
+          { v: "C", text: "有一套讲法，但成交率一般", score: 2 },
+          { v: "D", text: "有标准流程，多数体验能转疗程", score: 3 }
+        ]
+      },
+      {
+        part: "A", key: "复购机构", factor: "复购案例",
+        text: "已经产生复购的机构有几家？",
+        options: [
+          { v: "A", text: "还没有", score: 0 },
+          { v: "B", text: "1–2 家", score: 1 },
+          { v: "C", text: "3–5 家", score: 2 },
+          { v: "D", text: "5 家以上，而且复购稳定", score: 3 }
+        ]
+      },
+      {
+        part: "A", key: "标准案例", factor: "复购案例",
+        text: "能对外分享的标准案例（有标准照片、有数据、有过程），你有几个？",
+        options: [
+          { v: "A", text: "还没有", score: 0 },
+          { v: "B", text: "有素材，但没整理成标准案例", score: 1 },
+          { v: "C", text: "有 1–2 个", score: 2 },
+          { v: "D", text: "有 3 个以上，还在持续产出", score: 3 }
+        ]
+      },
+      {
+        part: "A", key: "最大卡点", factor: null, type: "pain",
+        text: "当前业务推进中，你最主要的卡点是哪一个？",
+        hint: "选最痛的那一个",
+        options: [
+          { v: "A", text: "找不准目标机构，约不到老板或决策人", pain: "覆盖" },
+          { v: "B", text: "讲不清项目价值，处理不了价格和合规异议", pain: "销售能力" },
+          { v: "C", text: "开户之后，机构迟迟不启动", pain: "启动转化" },
+          { v: "D", text: "体验转不了疗程，疗程后没有复购", pain: "复购案例" },
+          { v: "E", text: "团队没人愿意重点推，缺目标缺激励", pain: "组织" },
+          { v: "F", text: "基本靠自己单打独斗，不会借品牌方的力", pain: "借力" }
+        ]
+      },
+      {
+        part: "A", key: "专人负责", factor: "组织",
+        text: "公司里有没有专人负责核心品项？",
+        options: [
+          { v: "A", text: "没有，老板自己顺带管", score: 0 },
+          { v: "B", text: "有人兼着，精力有限", score: 1 },
+          { v: "C", text: "有专人，但还缺系统训练", score: 2 },
+          { v: "D", text: "有专人专岗，责任清晰", score: 3 }
+        ]
+      },
+      {
+        part: "A", key: "目标复盘", factor: "组织",
+        text: "团队有没有明确的拜访、开户、动销目标和每周复盘？",
+        options: [
+          { v: "A", text: "都没有", score: 0 },
+          { v: "B", text: "有目标，但没有复盘", score: 1 },
+          { v: "C", text: "有目标有复盘，但执行不稳定", score: 2 },
+          { v: "D", text: "目标清晰，每周复盘雷打不动", score: 3 }
+        ]
+      },
+      {
+        part: "A", key: "独立作战人数", factor: "组织",
+        text: "团队里能独立讲清项目价值、给机构做方案的人有几个？",
+        options: [
+          { v: "A", text: "0 个，全靠老板自己", score: 0 },
+          { v: "B", text: "1 个", score: 1 },
+          { v: "C", text: "2–3 个", score: 2 },
+          { v: "D", text: "3 个以上", score: 3 }
+        ]
+      },
+      {
+        part: "A", key: "专项激励", factor: "组织",
+        text: "针对核心品项，有没有专门的奖励或提成设计？",
+        options: [
+          { v: "A", text: "没有", score: 0 },
+          { v: "B", text: "和普通品项一个标准", score: 1 },
+          { v: "C", text: "有，但力度一般", score: 2 },
+          { v: "D", text: "有专项激励，团队愿意冲", score: 3 }
+        ]
+      },
+      {
+        part: "A", key: "借力品牌方", factor: "借力",
+        text: "品牌方的培训、沙龙、专家等资源，你用得怎么样？",
+        options: [
+          { v: "A", text: "基本没用过", score: 0 },
+          { v: "B", text: "偶尔参加活动", score: 1 },
+          { v: "C", text: "会主动申请，但没形成节奏", score: 2 },
+          { v: "D", text: "深度绑定，按节奏配合使用", score: 3 }
+        ]
+      },
+
+      /* ---------------- B 部分 ---------------- */
+      {
+        part: "B", key: "出镜状态", factor: "定位出镜",
+        text: "作为老板或操盘人，你现在的出镜状态是？",
+        options: [
+          { v: "A", text: "从没出过镜，也有点抗拒", score: 0 },
+          { v: "B", text: "想做，但一直没开始", score: 1 },
+          { v: "C", text: "偶尔发一条，凭感觉", score: 2 },
+          { v: "D", text: "已经在稳定出镜更新", score: 3 }
+        ]
+      },
+      {
+        part: "B", key: "账号定位", factor: "定位出镜",
+        text: "你的账号定位清晰吗？拍给谁看、解决什么问题？",
+        options: [
+          { v: "A", text: "还没有账号", score: 0 },
+          { v: "B", text: "有账号，但想到什么发什么", score: 1 },
+          { v: "C", text: "有大致方向，还不够聚焦", score: 2 },
+          { v: "D", text: "很清晰：面向机构老板和同行的专业IP", score: 3 }
+        ]
+      },
+      {
+        part: "B", key: "更新频率", factor: "内容",
+        text: "内容更新频率是？",
+        options: [
+          { v: "A", text: "基本不更新", score: 0 },
+          { v: "B", text: "一个月几条", score: 1 },
+          { v: "C", text: "每周 1–2 条", score: 2 },
+          { v: "D", text: "每周 3 条以上", score: 3 }
+        ]
+      },
+      {
+        part: "B", key: "内容质量", factor: "内容",
+        text: "你的内容里，专业干货和客户案例占多大比重？",
+        options: [
+          { v: "A", text: "谈不上，多是生活随手拍", score: 0 },
+          { v: "B", text: "少量，偶尔发产品广告", score: 1 },
+          { v: "C", text: "一半左右", score: 2 },
+          { v: "D", text: "以专业干货和案例为主", score: 3 }
+        ]
+      },
+      {
+        part: "B", key: "直播情况", factor: "直播私域",
+        text: "直播做得怎么样？",
+        options: [
+          { v: "A", text: "从没播过", score: 0 },
+          { v: "B", text: "试过几次，没坚持下来", score: 1 },
+          { v: "C", text: "不定期播", score: 2 },
+          { v: "D", text: "有固定的直播节奏", score: 3 }
+        ]
+      },
+      {
+        part: "B", key: "私域经营", factor: "直播私域",
+        text: "微信私域（好友、朋友圈）经营得怎么样？",
+        options: [
+          { v: "A", text: "好友不多，朋友圈基本不发业务", score: 0 },
+          { v: "B", text: "有好友量，但朋友圈想发什么发什么", score: 1 },
+          { v: "C", text: "朋友圈有规划，互动一般", score: 2 },
+          { v: "D", text: "私域分层经营，朋友圈就是我的名片", score: 3 }
+        ]
+      },
+      {
+        part: "B", key: "线上承接", factor: "承接转化",
+        text: "私信、直播间、视频引来的客人，你是怎么承接的？",
+        options: [
+          { v: "A", text: "基本没有线上来的客人", score: 0 },
+          { v: "B", text: "有人问才回，没有流程", score: 1 },
+          { v: "C", text: "会加微信跟进，但凭感觉", score: 2 },
+          { v: "D", text: "有标准承接流程：加微、评估、邀约成交", score: 3 }
+        ]
+      },
+      {
+        part: "B", key: "内容帮手", factor: "团队心态",
+        text: "拍摄、剪辑、账号运营，有没有人搭手？",
+        options: [
+          { v: "A", text: "没有，全靠自己", score: 0 },
+          { v: "B", text: "偶尔找人帮一下", score: 1 },
+          { v: "C", text: "有一个助理或兼职在支持", score: 2 },
+          { v: "D", text: "有小团队，分工明确", score: 3 }
+        ]
+      },
+      {
+        part: "B", key: "每周投入", factor: "团队心态",
+        text: "每周能稳定投入在内容上的时间有多少？",
+        options: [
+          { v: "A", text: "基本挤不出来", score: 0 },
+          { v: "B", text: "2 小时以内", score: 1 },
+          { v: "C", text: "2–5 小时", score: 2 },
+          { v: "D", text: "5 小时以上", score: 3 }
+        ]
+      },
+      {
+        part: "B", key: "起号心态", factor: "团队心态",
+        text: "如果前 30 条内容数据都很平，你会？",
+        options: [
+          { v: "A", text: "大概率就停更了", score: 0 },
+          { v: "B", text: "很受打击，不确定能不能坚持", score: 1 },
+          { v: "C", text: "能接受，但想知道问题出在哪", score: 2 },
+          { v: "D", text: "能接受，起号本来就需要时间", score: 3 }
+        ]
+      }
+    ];
+
+    /* ============ A 部分档位（14 题计分，满分 42）============ */
+    const TIERS_A = [
+      {
+        min: 0, max: 10, name: "蓄力筹备期",
+        title: "先把地基打好，别急着铺开",
+        body: [
+          "按你现在的情况，核心品项还没真正进入公司的业务主线。这个阶段最忌讳的是到处撒网：机构没筛准、团队没准备好，拜访越多消耗越大。",
+          "更省力的路径是先收拢：把机构盘认真盘一遍，选出 1–2 家最有把握的，集中资源打透第一家。"
+        ],
+        steps: [
+          "把长期合作的机构列成清单，按老客质量和老板意愿排序",
+          "选出第 1 家目标机构，准备一份正式项目方案",
+          "把核心品项在公司内部的位置定下来：要么重点做，要么先不做"
+        ]
+      },
+      {
+        min: 11, max: 21, name: "破冰开户期",
+        title: "先跑通第一家，比多开十家重要",
+        body: [
+          "你已经有机构基础和推进动作，但从开户到真正动销的链路还没跑通。这个阶段最常见的错觉是：开户数字在涨，业绩却没跟上——因为开户不等于启动，启动不等于成交。",
+          "接下来 30 天，把全部注意力放在一家机构上：培训、打板、标准拍照、首单成交，完整走一遍。跑通一家，你就有了可复制的路径。"
+        ],
+        steps: [
+          "选定一家最有条件的开户机构，约定明确的启动时间表",
+          "推动完成团队培训和首批模特打板，按标准留存照片",
+          "体验后 7 天内跟进转疗程，拿下第一单完整成交"
+        ]
+      },
+      {
+        min: 22, max: 32, name: "动销爬坡期",
+        title: "单点已经跑通，现在拼转化率和复购",
+        body: [
+          "你的业务链路基本成型，接下来的增长不靠开更多户，而靠把每一环的转化率提上来：体验转疗程的成交率、疗程后的复购率、案例的标准化产出。",
+          "同时要开始把老板的个人能力变成团队能力——你一个人能成交不算体系，团队能复制才算。"
+        ],
+        steps: [
+          "把体验转疗程的讲法整理成标准话术，团队人人过关",
+          "给复购设计明确的周期铺垫和维养方案，而不是等机构想起来",
+          "每月固定产出 1 个标准案例，用案例去撬下一批机构"
+        ]
+      },
+      {
+        min: 33, max: 42, name: "复制放大期",
+        title: "你缺的不是方法，是标准化和放大",
+        body: [
+          "你已经有稳定复购的机构和成型的团队打法，处在代理商里的前排位置。这个阶段的关键词是复制：把跑通的路径变成标准动作，让新人能上手、新区域能落地。",
+          "同时，标杆机构就是你最好的招商和动销素材——把它讲出去，放大它的杠杆价值。"
+        ],
+        steps: [
+          "把从拜访到复购的全流程写成内部 SOP，新人按表操作",
+          "把标杆机构整理成可对外分享的完整案例，用于沙龙和专场",
+          "考虑用个人IP放大影响力，让机构老板主动来找你"
+        ]
+      }
+    ];
+
+    /* ============ B 部分档位（10 题计分，满分 30）============ */
+    const TIERS_B = [
+      {
+        min: 0, max: 7, name: "IP未启动期",
+        title: "不用急着开拍，先解决“要不要做”",
+        body: [
+          "你的个人IP还没有真正开始。对上游代理商来说，IP不是必选项，但它是杠杆：同样见 10 个机构老板，有内容沉淀的人信任成本低得多。",
+          "这个阶段不用纠结拍什么，先做两件事：想清楚拍给谁看（机构老板，不是C端顾客），再把日常业务里的真实素材攒起来。"
+        ],
+        steps: [
+          "先关注 3–5 个同赛道的代理商或厂家IP，看他们在讲什么",
+          "手机建一个选题库：机构老板问过你的问题，每条都是选题",
+          "定一个决定：做，就给它每周固定时间；不做，就把私域朋友圈经营好"
+        ]
+      },
+      {
+        min: 8, max: 15, name: "IP试水期",
+        title: "别再“想到才发”，先建立最小节奏",
+        body: [
+          "你已经有账号或者开始尝试，但还没形成节奏和定位。这个阶段数据平是正常的，真正的风险是三天打鱼两天晒网，账号一直在从零重启。",
+          "先把定位收窄：只面向机构老板和同行讲专业内容，每周固定 1–2 条，坚持 90 天再谈效果。"
+        ],
+        steps: [
+          "用一句话写清账号定位：帮哪类机构解决什么问题",
+          "每周固定 1–2 条，选题全部来自机构老板的真实提问",
+          "每条内容结尾留一个钩子，引导私信或加微信"
+        ]
+      },
+      {
+        min: 16, max: 23, name: "IP成型期",
+        title: "内容在跑了，现在补转化的承接",
+        body: [
+          "你的内容生产已经成型，接下来最值钱的动作是把流量接住：从私信到微信、从微信到评估、从评估到见面，每一步都要有标准动作。",
+          "同时可以把直播提上日程——对上游生意来说，直播间是效率最高的机构老板筛选器。"
+        ],
+        steps: [
+          "给线上来的客人定一套承接流程：加微后 24 小时内完成首次沟通",
+          "朋友圈按 专业内容 / 案例见证 / 日常信任 三类内容规划",
+          "定一个固定直播时间，先从每周一场开始"
+        ]
+      },
+      {
+        min: 24, max: 30, name: "IP放大期",
+        title: "账号已经是资产，把它接进业务系统",
+        body: [
+          "你的个人IP已经初具规模，内容、直播、私域都在运转。这个阶段的重点是让IP和动销业务互相放大：内容里讲机构案例，直播间里做业务筛选，私域里做分层转化。",
+          "另外要开始沉淀团队化的内容能力，别让整个IP系在你一个人身上。"
+        ],
+        steps: [
+          "把标杆机构案例做成系列内容，让机构老板看到“跟你合作长什么样”",
+          "直播间设计固定的转化路径：内容、互动、私信、评估",
+          "培养 1 名内容操盘手，把选题和剪辑逐步交出去"
+        ]
+      }
+    ];
+
+    /* ============ A 部分薄弱维度诊断 ============ */
+    const FACTORS_A = {
+      "覆盖":     { max: 9,  label: "客户覆盖",  advice: "机构盘是动销的分母。先把长期联系的机构认真盘一遍，筛出真正适合的重点机构，带着正式方案去拜访——覆盖不够，后面每一环都无从谈起。" },
+      "启动转化": { max: 6,  label: "启动与转化", advice: "开户只是开始，培训、打板、体验转疗程才是动销真正发生的地方。给每家开户机构定启动时间表，体验后 7 天内必须跟进转化。" },
+      "复购案例": { max: 6,  label: "复购与案例", advice: "没有复购的成交是一次性买卖，没有案例的业绩无法复制。把复购周期设计进方案里，每个成功机构都按标准沉淀成案例。" },
+      "组织":     { max: 12, label: "团队组织",  advice: "老板一个人能卖不算体系。专人专岗、明确目标、每周复盘、专项激励，这四件事补上，团队才推得动。" },
+      "借力":     { max: 3,  label: "借力品牌方", advice: "品牌方的培训、专家、沙龙资源是你付过费的杠杆。主动申请、按节奏使用，别单打独斗。" }
+    };
+
+    /* ============ B 部分薄弱维度诊断 ============ */
+    const FACTORS_B = {
+      "定位出镜": { max: 6, label: "定位与出镜", advice: "定位不清、迟迟不出镜，是多数老板IP死在起点的原因。先用一句话定清楚拍给谁看，然后让第一条内容尽快发出去。" },
+      "内容":     { max: 9, label: "内容生产",  advice: "内容是IP的本体。频率先于质量：每周固定 1–2 条专业内容，选题全部来自机构老板的真实提问，坚持 90 天。" },
+      "直播私域": { max: 6, label: "直播与私域", advice: "直播间和朋友圈是上游生意离成交最近的两块阵地。先把朋友圈按规划发起来，再定一个固定直播时间。" },
+      "承接转化": { max: 3, label: "承接转化",  advice: "流量不承接等于白做。给线上来的每个客人定标准动作：加微、24 小时内首聊、发评估、约深聊。" },
+      "团队心态": { max: 6, label: "投入与心态", advice: "IP是长期工程，时间投入和预期管理决定能不能活过冷启动。每周划出固定时间，前 30 条不看数据只练手感。" }
+    };
+
+    /* ============ 状态与流程 ============ */
+    let idx = 0;
+    let answers = [];
+    let partBShown = false;
+
+    const $ = (id) => document.getElementById(id);
+    function show(id) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      $(id).classList.add("active");
+      window.scrollTo(0, 0);
+    }
+
+    function startQuiz() {
+      idx = 0; answers = []; partBShown = false;
+      show("s-quiz");
+      render();
+    }
+
+    function continuePartB() {
+      show("s-quiz");
+      render();
+    }
+
+    function render() {
+      const q = QUESTIONS[idx];
+      const partCount = QUESTIONS.filter(x => x.part === q.part).length;
+      const partIdx = QUESTIONS.slice(0, idx + 1).filter(x => x.part === q.part).length;
+      $("q-part").textContent = q.part === "A" ? "第一部分 · 动销业务评估" : "第二部分 · 个人IP评估";
+      $("q-no").textContent = "第 " + partIdx + " 题 / 共 " + partCount + " 题";
+      $("q-text").textContent = q.text;
+      $("q-hint").textContent = q.hint || "";
+      $("q-hint").style.display = q.hint ? "block" : "none";
+      $("back-btn").style.visibility = idx === 0 ? "hidden" : "visible";
+      $("progress").style.width = Math.round(idx / QUESTIONS.length * 100) + "%";
+
+      const box = $("options");
+      box.innerHTML = "";
+      q.options.forEach(opt => {
+        const b = document.createElement("button");
+        b.className = "option";
+        b.textContent = opt.v + ". " + opt.text;
+        b.onclick = () => pick(opt, q);
+        box.appendChild(b);
+      });
+    }
+
+    let locked = false;
+    function pick(opt, q) {
+      if (locked) return;
+      locked = true;
+      answers = answers.filter(a => a.key !== q.key);
+      answers.push({
+        key: q.key, v: opt.v, text: opt.text,
+        score: opt.score || 0, part: q.part,
+        factor: q.factor || null, pain: opt.pain || null
+      });
+      setTimeout(() => {
+        locked = false;
+        if (idx < QUESTIONS.length - 1) {
+          idx += 1;
+          if (QUESTIONS[idx].part === "B" && !partBShown) {
+            partBShown = true;
+            show("s-part-b");
+            return;
+          }
+          render();
+        } else {
+          showResult();
+        }
+      }, 160);
+    }
+
+    function goBack() {
+      if (idx === 0) return;
+      const prevKey = QUESTIONS[idx - 1].key;
+      answers = answers.filter(a => a.key !== prevKey);
+      idx -= 1;
+      render();
+    }
+
+    function tierOf(tiers, score) {
+      return tiers.find(t => score >= t.min && score <= t.max) || tiers[0];
+    }
+
+    function weakestFactor(part, factors) {
+      const sums = {};
+      answers.filter(a => a.part === part && a.factor).forEach(a => {
+        sums[a.factor] = (sums[a.factor] || 0) + a.score;
+      });
+      let weakest = null, weakestRatio = 1.01;
+      Object.keys(factors).forEach(f => {
+        const ratio = (sums[f] || 0) / factors[f].max;
+        if (ratio < weakestRatio) { weakestRatio = ratio; weakest = f; }
+      });
+      return weakestRatio >= 0.75 ? null : weakest;
+    }
+
+    /* ============ 展示结果 ============ */
+    let scoreA = 0, scoreB = 0, tierA = null, tierB = null;
+
+    function showResult() {
+      $("progress").style.width = "100%";
+      scoreA = answers.filter(a => a.part === "A").reduce((s, a) => s + a.score, 0);
+      scoreB = answers.filter(a => a.part === "B").reduce((s, a) => s + a.score, 0);
+      tierA = tierOf(TIERS_A, scoreA);
+      tierB = tierOf(TIERS_B, scoreB);
+
+      $("tier-a-name").textContent = tierA.name;
+      $("tier-a-score").textContent = scoreA + " / 42 分";
+      $("tier-b-name").textContent = tierB.name;
+      $("tier-b-score").textContent = scoreB + " / 30 分";
+      $("headline").textContent = tierA.title;
+
+      renderDiag("diag-a", tierA, weakA(), painAdvice());
+      renderDiag("diag-b", tierB, weakB(), null);
+      renderCombo();
+
+      show("s-result");
+    }
+
+    function weakA() {
+      const f = weakestFactor("A", FACTORS_A);
+      return f ? FACTORS_A[f] : null;
+    }
+    function weakB() {
+      const f = weakestFactor("B", FACTORS_B);
+      return f ? FACTORS_B[f] : null;
+    }
+    function painAdvice() {
+      const painAns = answers.find(a => a.key === "最大卡点");
+      return painAns ? { v: painAns.v, text: painAns.text } : null;
+    }
+
+    function renderDiag(elId, tier, weak, pain) {
+      const el = $(elId);
+      el.innerHTML = "";
+      const h = document.createElement("p");
+      h.innerHTML = "<b>" + tier.title + "</b>";
+      el.appendChild(h);
+      tier.body.forEach(t => {
+        const p = document.createElement("p");
+        p.textContent = t;
+        el.appendChild(p);
+      });
+      if (weak) {
+        const p = document.createElement("p");
+        p.innerHTML = "<span class='weak-tag'>最薄弱：" + weak.label + "</span>" + weak.advice;
+        el.appendChild(p);
+      }
+      if (pain) {
+        const p = document.createElement("p");
+        p.innerHTML = "<span class='weak-tag'>你选的卡点</span>「" + pain.text + "」——一对一评估时会重点拆这一环。";
+        el.appendChild(p);
+      }
+      const ul = document.createElement("ul");
+      ul.className = "next-steps";
+      tier.steps.forEach(s => {
+        const li = document.createElement("li");
+        li.textContent = s;
+        ul.appendChild(li);
+      });
+      el.appendChild(ul);
+    }
+
+    function renderCombo() {
+      const ia = TIERS_A.indexOf(tierA), ib = TIERS_B.indexOf(tierB);
+      let text;
+      if (ia >= 2 && ib <= 1) {
+        text = "综合来看：你的业务基本盘走在前面，个人IP是下一个最值得投的杠杆——业务里现成的机构案例和专业积累，就是别人拿不到的内容素材。";
+      } else if (ia <= 1 && ib >= 2) {
+        text = "综合来看：你的线上能力好于业务基本盘，当务之急是把流量兑现到动销主链路上——先跑通一家标杆机构，IP才有故事可讲。";
+      } else if (ia >= 2 && ib >= 2) {
+        text = "综合来看：业务和IP双线都已成型，你要做的是让两条线互相放大——用案例喂内容，用直播筛机构，用私域做转化。";
+      } else {
+        text = "综合来看：业务和IP都处在打地基的阶段，建议先集中精力跑通动销主链路，IP以低成本的方式先积累素材，不必两线同时发力。";
+      }
+      $("combo-note").textContent = text;
+    }
+
+    /* ============ 选填留资 ============ */
+    async function submitLead() {
+      const name = $("lead-name").value.trim();
+      const phone = $("lead-phone").value.replace(/\D/g, "");
+      const company = $("lead-company").value.trim();
+      const err = $("lead-error");
+
+      if (!name) { err.textContent = "请填写称呼。"; return; }
+      if (!/^1\d{10}$/.test(phone)) { err.textContent = "请填写有效的 11 位手机号。"; return; }
+      err.textContent = "";
+      const btn = $("lead-submit");
+      btn.disabled = true; btn.textContent = "提交中…";
+
+      const answersMap = { "称呼": name };
+      if (company) answersMap["公司区域"] = company;
+      answers.forEach(a => { answersMap[a.part + "·" + a.key] = a.v + "·" + a.text; });
+
+      const payload = {
+        phone,
+        submittedAt: new Date().toISOString(),
+        sourcePath: "/tools/agent-growth/",
+        answers: answersMap,
+        result: {
+          judgement: "代理商双维评估·动销" + tierA.name + scoreA + "/42·IP" + tierB.name + scoreB + "/30",
+          tool: "agent-growth-assessment",
+          kind: "dual-tier",
+          scoreA, scoreB,
+          tierA: tierA.name, tierB: tierB.name,
+          name, company
+        }
+      };
+
+      let stored = false;
+      try {
+        const res = await fetch("/api/leads", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        stored = res.ok;
+      } catch (e) { stored = false; }
+
+      if (stored) {
+        $("lead-opt").innerHTML = "<h3>已收到。</h3><p>助理会尽快联系你，安排一对一深度评估。</p>";
+      } else {
+        btn.disabled = false; btn.textContent = "提交";
+        err.textContent = "网络原因暂时没提交上，可以稍后再试，不影响查看结果。";
+      }
+    }
+
+    function restart() { show("s-landing"); }
+  </script>
+</body>
+</html>
